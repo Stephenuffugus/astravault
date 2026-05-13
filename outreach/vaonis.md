@@ -1,8 +1,8 @@
 # Vaonis — partnership outreach
 
 **Recipient:** Cyril Dupuy (Founder + CEO, Vaonis)
-**Channel:** Email — Vaonis press contact (`press@vaonis.com`) initial; LinkedIn intro preferred if available
-**Status:** DRAFT
+**Channel:** Primary: `press@vaonis.com` (general partnerships routing). Secondary: `contact@vaonis.com`. Tertiary: LinkedIn DM to Cyril directly (he replies).
+**Status:** READY TO SEND — personalize once and paste into Gmail.
 **Goal:** Vespera + Hyperia observation ingest into Astra Vault; co-marketing in the premium-tier segment.
 
 ---

@@ -10,7 +10,8 @@ conversations.
 
 | File | Use |
 |---|---|
-| [zero-budget-roadmap.md](./zero-budget-roadmap.md) | **Read this first.** The honest plan for getting from $0 to first revenue with no working capital. |
+| [RESTART.md](./RESTART.md) | **🚨 OPEN THIS WHEN STEPHEN COMES BACK FROM A BREAK.** Single file with the next 3 actions, pre-staged, ready to execute. |
+| [zero-budget-roadmap.md](./zero-budget-roadmap.md) | The honest longer-arc plan for getting from $0 to first revenue with no working capital. |
 | [partner-pipeline.md](./partner-pipeline.md) | Every outreach sent + every reply received. Status tracker. |
 | [revenue-tracker.md](./revenue-tracker.md) | Money in. Currently $0; update as licensing / grants / app revenue land. |
 | [expense-ledger.md](./expense-ledger.md) | Money out + planned essential spend, prioritized by leverage. |

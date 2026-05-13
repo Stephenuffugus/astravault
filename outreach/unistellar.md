@@ -1,8 +1,8 @@
 # Unistellar — partnership outreach
 
 **Recipient:** Franck Marchis (Co-founder, Chief Scientific Officer, Unistellar; also Senior Scientist at SETI Institute)
-**Channel:** Email — `fmarchis@seti.org` is his publicly-listed SETI address (use only if no Unistellar-direct route is found; ideally route through `partners@unistellar.com` or a LinkedIn intro)
-**Status:** DRAFT
+**Channel:** Primary: `fmarchis@seti.org` (his publicly-listed SETI address). Secondary: `contact@unistellar.com`. Tertiary: LinkedIn DM (he's active there).
+**Status:** READY TO SEND — personalize once and paste into Gmail.
 **Goal:** Read-only observation import from Unistellar's app into Astra Vault, with attribution back to the user's eVscope session.
 
 ---

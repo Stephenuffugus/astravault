@@ -1,5 +1,5 @@
 {
-  "name": "@astravault/alpaca-client",
+  "name": "astravault-alpaca-client",
   "version": "0.1.0",
   "description": "TypeScript client for the ASCOM Alpaca telescope-control protocol",
   "type": "module",
@@ -73,15 +73,16 @@
     "astrophotography"
   ],
   "license": "MIT",
-  "author": "Astra Vault contributors",
+  "author": "Stephen Furpahs",
   "repository": {
     "type": "git",
-    "url": "https://github.com/astravault/alpaca-client.git"
+    "url": "https://github.com/Stephenuffugus/astravault.git",
+    "directory": "packages/alpaca-client"
   },
   "bugs": {
-    "url": "https://github.com/astravault/alpaca-client/issues"
+    "url": "https://github.com/Stephenuffugus/astravault/issues"
   },
-  "homepage": "https://github.com/astravault/alpaca-client#readme",
+  "homepage": "https://github.com/Stephenuffugus/astravault/tree/main/packages/alpaca-client#readme",
   "engines": {
     "node": ">=18"
   },

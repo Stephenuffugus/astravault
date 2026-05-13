@@ -1,8 +1,8 @@
 # ZWO Seestar — partnership outreach
 
-**Recipient:** Sam Wen (and the Suzhou Seestar team) — partnerships / dev relations
-**Channel:** Email to ZWO partnerships address (`info@zwoptical.com` initial, ask for routing to Suzhou Seestar team in body)
-**Status:** DRAFT
+**Recipient:** Sam Wen, CEO + founder of ZWO Optical Co. (and the Suzhou Seestar team)
+**Channel:** Primary: `info@zwoptical.com` (ZWO's general inquiries — ask for routing to Sam / Seestar dev relations in body). Secondary: ZWO's contact form at `https://astronomy-imaging-camera.com/contact-us`. Tertiary: Twitter/X DM to `@zwoasi` (public-facing, replies often).
+**Status:** READY TO SEND — just personalize once and paste into Gmail.
 **Goal:** Get Astra Vault listed on the seestar.com "compatible apps" page; align on Seestar adapter built atop our open-source TS Alpaca client.
 
 ---
