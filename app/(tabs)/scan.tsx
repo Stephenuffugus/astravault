@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import CelestialCanvas from '@/components/sky/CelestialCanvas';
+import FrameCaptureSurface from '@/components/sky/FrameCaptureSurface';
 import {
   atpFor,
   CATEGORY_ICONS,
@@ -64,6 +65,8 @@ export default function ScanScreen() {
         isCollected={isCollected}
         key={Object.keys(collected).length}
       />
+
+      <FrameCaptureSurface />
 
       <View style={styles.captureBar} pointerEvents="box-none">
         <Pressable

@@ -30,7 +30,10 @@ import {
   type ObserverPose,
 } from './captureRecord';
 
-export type CaptureTriggerListener = (mode: CaptureMode) => void | Promise<void>;
+export type CaptureTriggerListener = (
+  mode: CaptureMode,
+  record: MomentCaptureRecord | null,
+) => void | Promise<void>;
 
 export interface CaptureEngineConfig {
   /** Wake word phrases that fire a voice trigger. */
@@ -70,10 +73,13 @@ export const onCaptureTrigger = (listener: CaptureTriggerListener): (() => void)
   };
 };
 
-const notifyListeners = async (mode: CaptureMode): Promise<void> => {
+const notifyListeners = async (
+  mode: CaptureMode,
+  record: MomentCaptureRecord | null,
+): Promise<void> => {
   for (const listener of listeners) {
     try {
-      await listener(mode);
+      await listener(mode, record);
     } catch {
       // Listener errors must never break the capture path.
     }
@@ -97,7 +103,7 @@ export const triggerCapture = async (
   if (!loc) {
     // Without a location fix the observation has no scientific value;
     // bail rather than create a useless record.
-    await notifyListeners(mode);
+    await notifyListeners(mode, null);
     return null;
   }
 
@@ -143,7 +149,7 @@ export const triggerCapture = async (
   // and the GMN match (when it lands) materializes via the store update.
   void kickoffCrossReference(record);
 
-  await notifyListeners(mode);
+  await notifyListeners(mode, record);
   return record;
 };
 

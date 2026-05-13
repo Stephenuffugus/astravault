@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Badge, Card, SectionLabel } from '@/components/common';
 import { GMN_ATTRIBUTION } from '@/services/apis/gmnNetwork';
@@ -87,6 +87,15 @@ function CaptureRow({ record }: { record: MomentCaptureRecord }) {
           : ''}
       </Text>
 
+      {record.frames.length > 0 && record.frames[0] ? (
+        <Image
+          source={{ uri: record.frames[0].uri }}
+          style={styles.frameThumb}
+          resizeMode="cover"
+          accessibilityLabel={`Captured frame at ${fmtTime(record.frames[0].capturedAt)}`}
+        />
+      ) : null}
+
       {cr.showerName ? (
         <View style={styles.matchPanel}>
           <Text style={styles.matchHeader}>{cr.showerName}</Text>
@@ -171,6 +180,14 @@ const styles = StyleSheet.create({
     color: colors.text.muted,
     fontFamily: t.fonts.mono,
     marginBottom: 6,
+  },
+  frameThumb: {
+    width: '100%',
+    height: 180,
+    borderRadius: radii.button,
+    backgroundColor: 'rgba(255,255,255,0.03)',
+    marginBottom: 8,
+    marginTop: 4,
   },
   matchPanel: {
     marginTop: 6,

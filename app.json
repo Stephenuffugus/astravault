@@ -45,7 +45,15 @@
     },
     "plugins": [
       "expo-router",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Astra Vault uses the camera to capture meteor and event frames. Captures are time-synced and geotagged for cross-reference with professional astronomy networks.",
+          "microphonePermission": false,
+          "recordAudioAndroid": false
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
