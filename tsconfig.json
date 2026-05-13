@@ -14,5 +14,5 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
   ],
-  "exclude": ["node_modules", "astra-vault-handoff"]
+  "exclude": ["node_modules", "astra-vault-handoff", "packages"]
 }

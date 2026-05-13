@@ -1,0 +1,9 @@
+examples/
+research/
+*.test.ts
+*.test.js
+*.test.d.ts
+tsconfig.tsbuildinfo
+.github/
+.vscode/
+node_modules/

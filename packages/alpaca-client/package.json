@@ -1,0 +1,93 @@
+{
+  "name": "@astravault/alpaca-client",
+  "version": "0.1.0",
+  "description": "TypeScript client for the ASCOM Alpaca telescope-control protocol",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "import": "./dist/client.js"
+    },
+    "./discovery": {
+      "types": "./dist/discovery.d.ts",
+      "import": "./dist/discovery.js"
+    },
+    "./errors": {
+      "types": "./dist/errors.d.ts",
+      "import": "./dist/errors.js"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "import": "./dist/types.js"
+    },
+    "./devices/telescope": {
+      "types": "./dist/devices/telescope.d.ts",
+      "import": "./dist/devices/telescope.js"
+    },
+    "./devices/camera": {
+      "types": "./dist/devices/camera.d.ts",
+      "import": "./dist/devices/camera.js"
+    },
+    "./devices/focuser": {
+      "types": "./dist/devices/focuser.d.ts",
+      "import": "./dist/devices/focuser.js"
+    },
+    "./devices/filterwheel": {
+      "types": "./dist/devices/filterwheel.d.ts",
+      "import": "./dist/devices/filterwheel.js"
+    },
+    "./devices/observingconditions": {
+      "types": "./dist/devices/observingconditions.d.ts",
+      "import": "./dist/devices/observingconditions.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test --import tsx 'src/**/*.test.ts'",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "ascom",
+    "alpaca",
+    "astronomy",
+    "telescope",
+    "ASCOM",
+    "Alpaca",
+    "observatory",
+    "smart-telescope",
+    "seestar",
+    "astrophotography"
+  ],
+  "license": "MIT",
+  "author": "Astra Vault contributors",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/astravault/alpaca-client.git"
+  },
+  "bugs": {
+    "url": "https://github.com/astravault/alpaca-client/issues"
+  },
+  "homepage": "https://github.com/astravault/alpaca-client#readme",
+  "engines": {
+    "node": ">=18"
+  },
+  "sideEffects": false,
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "typescript": "^5.3.0"
+  }
+}
