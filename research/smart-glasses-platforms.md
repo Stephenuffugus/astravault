@@ -22,7 +22,7 @@
 11. **Project Aria (Meta research)** — not a consumer product, but Meta publishes massive multimodal datasets (Aria Everyday Activities, Aria Digital Twin) under research license. Useful for training meteor-streak detectors and 6DoF head-pose models. 🟢 Free training data.
 12. **Tencent / ByteDance / Xiaomi** — Xiaomi Mijia Smart Glasses (2025, ~¥1,999 / $279) sold strongly in China; Tencent has demoed prototypes but has not shipped a consumer SKU as of training cutoff. ByteDance acquired Pico (VR) and has rumored AR glasses but no public SDK. China-only distribution risk is high; Astra Vault should ignore until 2027 unless we explicitly target APAC.
 13. **TCL RayNeo X3 Pro shipped in China May 27 2025 at ~¥8,999 (~$1,250); US listing at $1,299** with full-color microLED waveguide + built-in eSIM (CES 2026 demos) [verified 2026-05-13](https://www.microled-info.com/tcl-rayneo-x3-pro-ar-glasses-are-now-shipping-china-1250). Distribution is China-first; US trade-in promotion 12/2025–1/2026 indicates early US channel pilots. Watch list.
-14. **Halliday DigiWindow glasses are shipping at $489**; the DigiWindow is a projector aimed at the upper-right of the user's vision — **no camera, 28.5 g, ~12 hr battery**; reviews are mixed, no public SDK announced [verified 2026-05-13](https://www.androidpolice.com/halliday-glasses-review/). 🚨 **Major correction:** earlier draft claimed "5 MP camera" — **Halliday has NO camera.**
+14. **Halliday DigiWindow glasses are shipping at $489–$499**; the DigiWindow is a 3.6 mm micro-LED projector module aimed at the upper-right of the user's vision (not a waveguide) — **no camera, 28.5 g, ~12 hr battery**; reviews are mixed, no public SDK announced [verified 2026-05-13](https://www.androidpolice.com/halliday-glasses-review/) [verified 2026-05-13](https://techcrunch.com/2025/01/08/hallidays-489-smart-glasses-beam-a-tiny-screen-to-your-eye/). 🚨 **Major correction:** earlier draft claimed "5 MP camera" — **Halliday is intentionally camera-free as part of its proactive-AI privacy posture.**
 15. **Solos AirGo Vision $349 / AirGo V2 $299 (CES 2026)** — AirGo V2 is now the current model with **16 MP camera, live video stabilization, ChatGPT + Gemini bot support; AirGo Vision integrates ChatGPT-4o** [verified 2026-05-13](https://www.androidcentral.com/wearables/solos-airgo-v2-smart-glasses-are-here-with-camera-enabled-ai-for-usd299-at-ces-2026). No HUD, no public SDK. Tier 3.
 16. **Magic Leap 2 ($3,299, enterprise)** has a real OpenXR + Lumin OS SDK with eye tracking and a dimmable lens. Form factor (260g) is unsuitable for casual sky observation. Useful only for guided-experience installations (e.g., planetariums).
 17. **Sightful Spacetop G1 (~$1,900, 2024)** — discontinued as a hardware product in 2024; Sightful pivoted to Spacetop for Windows software running on XREAL/Rokid hardware. Not a platform to target.
@@ -256,7 +256,7 @@
 
 **SDK story:** visionOS = SwiftUI + RealityKit + ARKit. Same Swift codebase as iOS with Spatial extensions. When Apple Glasses ship, the most likely SDK is a visionOS variant — meaning **Astra Vault must have a visionOS app ready** to leverage Day-1 glasses launch.
 
-**Astronomy suitability:** TBD; Apple Vision Pro 9/10 (today, but tiny installed base); Apple Glasses 9/10 (when shipped).
+**Astronomy suitability:** Apple Vision Pro **9/10 today** (visionOS 26 Jupiter Environment + Sky Guide already shipping; M5 refresh increases ML capacity; tiny installed base remains the bottleneck); Apple Glasses **6/10 first gen** (display-less = no overlay, like Ray-Ban Gen 2) / **9/10 second gen** (HUD-equipped, 2028+).
 
 🟢 **Strategic recommendation:** Build the visionOS version of Astra Vault NOW. The work transfers directly to Apple Glasses.
 
@@ -641,28 +641,28 @@ Given Astra Vault's roadmap (Part 1 meteor capture as the killer feature; Part 2
 
 ---
 
-## Open Questions (Need live verification)
+## Open Questions (Status after 2026-05-13 verification)
 
-1. **Meta Ray-Ban Display exact display spec** — resolution, FoV, nits floor. Public specs are still vague; Meta has only published "monocular full-color display."
-2. **Meta WDAT graphics API roadmap.** When does Meta open frame-buffer overlay to third parties? Required for our overlay mode.
-3. **Meta Ray-Ban / Oakley HSTN cumulative units shipped** as of May 2026 (estimated >7M end-of-2025; current figure unknown).
-4. **Samsung Moohan retail launch date and price** — Q1 2026 announced but consumer launch specifics shifting.
-5. **Apple Glasses status** — Bloomberg coverage updates through May 2026 not in training data.
-6. **Snap Spectacles consumer SKU** — rumored 2026, no firm date.
-7. **Rokid Glasses global (non-China) availability.**
-8. **TCL RayNeo X3 ship date and SDK release.**
-9. **Brilliant Labs Halo specs and ship date.**
-10. **Project Aria Gen 2 availability for non-academic partners.**
-11. **Even Realities G2** — rumored 2026, possibly with camera; if so, jumps from Tier 3 to Tier 2.
-12. **Magic Leap consumer story** — has Magic Leap announced a Magic Leap 3 or consumer pivot in 2026?
-13. **Vuzix Z200** — rumored successor with camera; unconfirmed.
-14. **Xiaomi 2026 smart glasses SKU** specs and SDK openness.
-15. **Gemini for Android XR API** — what astronomy-specific entitlements exist? Custom astronomical model adapters?
-16. **Whether any platform offers "dark-sky mode" firmware** with red-only LED indicators.
-17. **iOS / Android background mic permission lifecycle on glasses** — does the phone-paired model give us continuous-listen for "Hey Astra"?
-18. **Snap Lens Studio "AR Spectacles standalone runtime"** — has Snap shipped untethered runtime since 2024?
-19. **Privacy regulation update** — EU AI Act + state laws on biometric / face capture from glasses. Affects every camera-equipped platform.
-20. **Pricing of all dev kits as of May 2026** — esp. WDAT (free? paid?), Snap Spectacles ($99/mo confirmed through 2025; 2026 status?), Android XR developer hardware bundles.
+1. ✅ **Meta Ray-Ban Display display spec** — resolved: 600×600, 20° diagonal (14°H × 14°V), 30–5,000 nits, 90 Hz max (30 Hz content) [verified 2026-05-13](https://www.uploadvr.com/meta-ray-ban-display-review/).
+2. ❌ **Meta WDAT graphics API roadmap** — still unconfirmed; Meta has not committed to a date for HUD frame-buffer or Neural Band gesture access for third parties. General-availability publishing targeted for 2026, but graphics API is not part of the GA scope.
+3. ✅ **Meta-glasses cumulative units shipped** — resolved: >2M by Feb 2025, 2025 sales tripled 2023+2024 combined, projected ~7M full-year 2025, scaling to 10M production end-2026, 20M target [verified 2026-05-13](https://www.cnbc.com/2026/02/11/ray-ban-maker-essilorluxottica-triples-sales-of-meta-ai-glasses.html).
+4. ✅ **Samsung Galaxy XR (Moohan)** — resolved: shipped 31 Oct 2025, $1,799 USD [verified 2026-05-13](https://www.roadtovr.com/samsung-galaxy-xr-headset-price-specs-release-date/).
+5. ⚠️ **Apple Glasses status** — partial: Gurman now reports late-2026 unveil → 2027 retail, 4 acetate frame styles, display-less first gen; firm specs / SDK still unknown [verified 2026-05-13](https://appleinsider.com/articles/26/04/20/smart-glasses-race-heats-up-as-apple-prepares-for-late-2026-entry).
+6. ✅ **Snap Spectacles consumer SKU** — resolved: confirmed for 2026 ("Snap Specs"), but exact date and price still undisclosed [verified 2026-05-13](https://newsroom.snap.com/launch-specs-2026?lang=en-US).
+7. ✅ **Rokid Glasses global** — resolved: **Rokid AI Glasses Style** went globally available 19 Jan 2026 at $299 (display-free); HUD Glasses model remains primarily China at $499 [verified 2026-05-13](https://www.prnewswire.com/news-releases/rokid-ai-glasses-style-now-available-globally-302664994.html).
+8. ✅ **TCL RayNeo X3 Pro** — resolved: ship date May 27 2025 China at ~¥8,999, US listing at $1,299 with trade-in promo Dec 2025–Jan 2026; CES 2026 demos for eSIM variant [verified 2026-05-13](https://www.microled-info.com/tcl-rayneo-x3-pro-ar-glasses-are-now-shipping-china-1250). RayNeo SDK details still thin.
+9. ✅ **Brilliant Labs Halo** — resolved: $299 pre-order ($349 post-launch), shipping late Nov 2025, Alif B1 NPU, 14 hr battery, Flutter SDK, "Vibe Mode" [verified 2026-05-13](https://www.roadtovr.com/brilliant-labs-halo-smart-glasses-price-release-date/).
+10. ✅ **Project Aria Gen 2 availability** — resolved: applications open, broad rollout Q2 2026 to qualified applicants (academic + corporate); >200 partners already on program [verified 2026-05-13](https://www.meta.com/blog/aria-gen-2-updates/).
+11. ✅ **Even Realities G2** — resolved: shipped 12 Nov 2025 at $599, **still no camera, no speakers** (privacy-by-design) — Tier 3 verdict reinforced [verified 2026-05-13](https://9to5google.com/2025/11/12/even-realities-launches-g2-smart-glasses-r1-control-ring/).
+12. ❌ **Magic Leap consumer story** — no new consumer pivot or Magic Leap 3 announcement found in 2026 public reporting; remains enterprise-only.
+13. ❌ **Vuzix Z200** — no public announcement found; Z100 dev edition remains current.
+14. ❌ **Xiaomi 2026 smart glasses SKU** — Mijia rumored; no firm 2026 SKU confirmed publicly.
+15. ⚠️ **Gemini for Android XR API** — astronomy-specific entitlements not yet documented; Google I/O 2026 (today) is the formal Android XR showcase event. Re-check post-keynote.
+16. ❌ **"Dark-sky mode" firmware with red-only LED** — no platform has shipped this; still a patent / partnership opportunity for Astra Vault.
+17. ❌ **iOS / Android background mic permission lifecycle on glasses** — still a per-app entitlement question; not platform-policy answered.
+18. ✅ **Snap Lens Studio "standalone runtime"** — resolved: Spectacles Gen 5 is fully untethered standalone with up to 45 min runtime; Snap OS 2.0 announced; Lens Studio 5 + mobile/web Blocks shipped 2025 [verified 2026-05-13](https://www.developer-tech.com/news/snap-os-debuts-with-developer-friendly-spectacles-5-ar-glasses/).
+19. ⚠️ **Privacy regulation update** — EU AI Act in force; state-level biometric capture laws (Illinois BIPA, Texas CUBI, Washington WMHDA) still binding on every camera-equipped platform; no glasses-specific carve-out.
+20. ⚠️ **Dev kit pricing** — Snap Spectacles $99/mo continues (US/EU education $49.50/mo); WDAT remains free with approval; Android XR SDK free + Galaxy XR retail purchase ($1,799) required for hardware.
 
 ---
 
@@ -686,3 +686,62 @@ Everything else is watch list.
 ---
 
 RESEARCH COMPLETE — smart-glasses-platforms.md written, 25 platforms profiled.
+
+---
+
+## Verified Updates (2026-05-13)
+
+This section logs the second-pass live-web verification performed on **2026-05-13** with WebSearch + WebFetch enabled. The first verification pass (also dated 2026-05-13) populated most of the inline citations in the per-platform tables above; this section is the **summary of corrections and net-new findings from the second pass**, plus a status report on remaining unconfirmed items. See `glasses-verification-delta.md` for the engineering-facing companion.
+
+### Corrections made (memory was wrong)
+
+1. **Meta Ray-Ban Display weight: was "~50 g (unconfirmed)" → now 69 g standard / 70 g large.** Most-cited reviewer measurement. The 50 g number was likely confused with the regular Ray-Ban Meta (52 g). Sources: [UploadVR review](https://www.uploadvr.com/meta-ray-ban-display-review/), [Engadget review](https://www.engadget.com/wearables/meta-ray-ban-display-review-chunky-frames-with-impressive-abilities-193127070.html). **Implication:** Display glasses are ~33% heavier than the regular Ray-Ban Meta — long observing sessions will be noticeably more fatiguing. Re-evaluate "comfort-validation flow" patent claim 5 in the dealbreakers section.
+
+2. **Meta Ray-Ban Display HUD-on battery: was "~4 hr (unconfirmed)" → now ~1.5 hr observed in Tom's Guide testing.** Real-world battery drained to 40% after 90 min of moderate (podcast + occasional HUD) use. Meta's "up to 6 hr mixed use" claim is correct only for very light usage. Source: [Tom's Guide review](https://www.tomsguide.com/computing/smart-glasses/meta-ray-ban-display-review). **Implication:** A 4-hour Astra Vault dark-sky session is impossible on a single charge with active HUD use; we will need a power-aware Standby-HUD profile or sell users on a battery case + spare-glasses workflow.
+
+3. **Oakley Meta HSTN weight: was "~58 g (unconfirmed)" → now ~53 g O-Matter frame.** Source: [Tom's Guide review](https://www.tomsguide.com/computing/smart-glasses/oakley-meta-hstn-smart-glasses-review-what-i-love-and-whats-still-missing). Other trackers cite 49 g (same as Ray-Ban Meta) — the 53 g number is the most consistent across hands-on reviews.
+
+4. **Even Realities G2 launch date: was "April 2026" → now 12 Nov 2025.** Major date error — the doc conflated the **Even Hub app store launch (3 Apr 2026)** with the G2 hardware launch (12 Nov 2025). G2 has been shipping for ~6 months as of this verification. Source: [9to5Google](https://9to5google.com/2025/11/12/even-realities-launches-g2-smart-glasses-r1-control-ring/), [Gizmodo](https://gizmodo.com/even-realities-g2-smart-glasses-november-12-announcement-2000682669).
+
+5. **Even Realities G2 has no speakers (was missing).** The original draft noted "no camera" but missed that G2 also has no audio output — both omitted by privacy design. This reinforces Tier 3 status: Astra Vault cannot do audio narration on G2 either, which is half the Ray-Ban-Meta-class user experience we'd otherwise replicate. Source: [The Gadgeteer](https://the-gadgeteer.com/2026/04/04/7-reasons-these-camera-free-smart-glasses-keep-winning/).
+
+6. **Even Hub SDK documentation NOT yet public (was "open SDK").** The Even Hub launched 3 Apr 2026 with 50 apps and 2,000+ registered developers, but the public SDK documentation has not yet been published — apps are built under NDA with Even Realities. This downgrades Even Realities' platform-openness positioning. Source: [Next Reality](https://virtual.reality.news/news/even-realities-even-hub-launches-can-constrained-smart-glasses-build-an-app-ecosystem/).
+
+7. **Halliday Glasses: contradiction in original draft resolved.** Earlier in the doc, the Halliday spec table claimed "5 MP camera" while a later correction noted "no camera." The verified truth: **Halliday has no camera by design — it is a proactive-AI privacy-first device.** The 5 MP claim originated from CES 2025 third-party tracker confusion. Sources: [Android Police review](https://www.androidpolice.com/halliday-glasses-review/), [Halliday product page](https://hallidayglobal.com/products/halliday-glasses).
+
+8. **XREAL Air 2 Ultra DISCONTINUED (Feb 2026).** Was not flagged in the previous draft. After-sales support continues but the Ultra is no longer sold through official XREAL channels. The 6DoF use case shifts to XREAL Project Aura (Android XR partner glasses) in 2026. Source: [MoguraVR](https://www.moguravr.com/xreal-air-2-ultra-discontinued/).
+
+9. **XREAL installed base sharper than "unconfirmed >500k":** XREAL crossed 700k lifetime units by Jun 2025, with One series alone shipping 111k units in 2025 and ~36% global AR-display-glasses market share Q2 2025. XREAL also filed for Hong Kong IPO in 2026. Source: [36Kr Europe](https://eu.36kr.com/en/p/3750612889649669).
+
+10. **Rokid global Tier-1 line is now a different SKU than originally listed.** Original draft assumed the global Rokid would be the HUD-equipped China model. Reality: **Rokid AI Glasses Style** (the global SKU) is screenless, 38.5 g, $299, with a dual-chip NXP-RT600 + Snapdragon-AR1 architecture, 4K camera, multi-LLM (ChatGPT + Gemini + Qwen + DeepSeek), and a 20k-developer ecosystem. The HUD model remains China-first at $499. This is a structural change — global Rokid is now an audio/camera competitor to Ray-Ban Meta Gen 2, not a Meta Ray-Ban Display competitor. Source: [Rokid PR](https://www.prnewswire.com/news-releases/rokid-ai-glasses-style-now-available-globally-302664994.html).
+
+11. **Brilliant Labs Halo shipped Nov 2025 — was previously "rumored late 2025 with thin specs."** Full spec verified: $299 pre-order ($349 post-launch), Alif Semi B1 chip with on-chip NPU, 14 hr battery, bone-conduction speakers, 0.2″ microOLED HUD via prism (not waveguide), Flutter SDK + native iOS/Android APIs on GitHub, "Vibe Mode" natural-language app authoring, Noa AI with persistent memory. Source: [Road to VR](https://www.roadtovr.com/brilliant-labs-halo-smart-glasses-price-release-date/), [Tom's Guide](https://www.tomsguide.com/computing/smart-glasses/brilliant-labs-unveils-halo-the-worlds-thinnest-ai-glasses-and-it-wants-to-be-your-everyday-specs).
+
+12. **Apple Glasses Gurman timing firmed up.** Late-2026 announce → 2027 retail launch (previously "2026–2027 target"). Four acetate frame designs in testing. Display-less first generation (Ray-Ban-Meta competitor); HUD model is now reportedly 2028+. Vision Pro 2 redesign reportedly shelved to prioritize glasses. Source: [AppleInsider](https://appleinsider.com/articles/26/04/20/smart-glasses-race-heats-up-as-apple-prepares-for-late-2026-entry).
+
+13. **Apple Vision Pro M5 refresh + visionOS 26 Jupiter Environment.** Apple Vision Pro received M5 refresh Oct 22 2025 ($3,499 unchanged, Dual Knit Band, 120 Hz, ~2.5 hr battery); visionOS 26 (Sep 15 2025) shipped Spatial Widgets + the **interactive Jupiter Environment** — first truly interactive astronomy environment on a major XR platform. Sources: [Apple newsroom](https://www.apple.com/newsroom/2025/10/apple-vision-pro-upgraded-with-the-m5-chip-and-dual-knit-band/), [TUAW](https://www.tuaw.com/2025/09/13/visionos-26-adds-interactive-jupiter-experience-to-vision-pro).
+
+### Net-new strategic findings from this verification pass
+
+- **Apple is now first-party in astronomy environments.** The Jupiter Environment in visionOS 26 is the first time Apple has shipped a real-time interactive astronomy experience on its own OS. Astra Vault's visionOS port should ride alongside, not compete with, the Environments system — propose extensions (downloadable celestial-body environments? user-recorded sky-dome environments?) rather than a standalone app that ignores them.
+
+- **Rokid Style globalization changes the Tier-1 list shape.** With Rokid Style at $299 globally with a 20k-developer open ecosystem, the audio/camera-glasses tier is now a four-horse race: Meta Ray-Ban Gen 2 ($379), Oakley Meta HSTN ($399), Rokid AI Glasses Style ($299), Oakley Meta Vanguard ($499). Astra Vault should plan to ship to Rokid Style in Phase 1 alongside the Meta family — same architecture (voice + camera + audio narration), broader global distribution.
+
+- **Even Hub launched without public SDK docs.** This is a Tier-3 platform's typical posture but is worth flagging because it signals **the Even Hub is gated, not open**. Treat Even Hub similarly to Meta WDAT: developer-program approvals required.
+
+- **Brilliant Labs Halo is the cleanest open SDK in the market.** Flutter (matches our React Native stack better than Lua/Python), GitHub-hosted, on-chip NPU (Alif B1) supports on-device meteor detection without phone offload. Strongest recommendation in this pass: ship a "Sky Lab" Halo build in Phase 1.
+
+- **Project Aria Gen 2 is open for new applications.** Apply now — Q2 2026 rollout means hardware in hand within weeks if accepted; that maps onto our 6-month Phase 1 timeline.
+
+### Still unconfirmed after this pass
+
+- Meta WDAT graphics API and Neural Band gesture API roadmap — no public Meta commitment.
+- Specific voice-trigger latency benchmarks (ms) for Ray-Ban Display HUD invocation — reviewers describe qualitatively as "near real-time" but no numeric benchmarks published.
+- Magic Leap 3 / consumer pivot — no public news in 2026.
+- Vuzix Z200 successor — not announced.
+- Xiaomi 2026 smart-glasses SKU specs and SDK openness — Mijia rumored but unconfirmed.
+- Gemini Android XR astronomy entitlements — Google I/O 2026 (today, 13 May 2026) is the announcement window; re-verify within 48 hours.
+- Dark-sky-mode firmware on any platform — none ship today; partnership / patent gap remains.
+- RayNeo X3 Pro SDK developer docs — claim exists, public docs thin.
+- iOS / Android background-mic lifecycle on glasses-paired apps — needs platform-engineering confirmation, not journalism.
+
