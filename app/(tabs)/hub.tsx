@@ -30,7 +30,7 @@ import {
   type UpcomingLaunch,
 } from '@/services/apis/launchLibrary';
 import { useLocation } from '@/services/location';
-import { useBortle, useMeteorCaptures, useToast } from '@/stores';
+import { useBortle, useMeteorCaptures, useScopes, useToast } from '@/stores';
 import ObservationTimer from '@/components/widgets/ObservationTimer';
 import { colors, radii, spacing, typography } from '@/theme/tokens';
 
@@ -79,6 +79,7 @@ export default function HubScreen() {
   const lastBortle = useBortle((s) => s.reports[0]);
   const captureCount = useMeteorCaptures((s) => s.captures.length);
   const lastCapture = useMeteorCaptures((s) => s.captures[0]);
+  const scopeCount = useScopes((s) => s.scopes.length);
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
@@ -191,6 +192,22 @@ export default function HubScreen() {
           )}
         </Pressable>
       ) : null}
+
+      <Pressable onPress={() => router.push('/scopes')} accessibilityRole="button">
+        {({ pressed }) => (
+          <Card style={pressed ? styles.pressed : undefined}>
+            <SectionLabel color={colors.accent.purple}>Connected Telescopes</SectionLabel>
+            <Text style={styles.bortleTitle}>
+              {scopeCount === 0
+                ? 'Connect your Seestar'
+                : `${scopeCount} scope${scopeCount === 1 ? '' : 's'} connected`}
+            </Text>
+            <Text style={styles.bortleSub}>
+              ASCOM Alpaca · LAN · drive slews and log observations
+            </Text>
+          </Card>
+        )}
+      </Pressable>
 
       <ObservationTimer />
     </ScrollView>

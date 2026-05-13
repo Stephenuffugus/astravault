@@ -99,6 +99,10 @@ export default function RootLayout() {
                 name="captures"
                 options={{ presentation: 'card' }}
               />
+              <Stack.Screen
+                name="scopes"
+                options={{ presentation: 'card' }}
+              />
             </Stack>
           </View>
           <Toast message={toastMessage} variant={toastVariant} />
