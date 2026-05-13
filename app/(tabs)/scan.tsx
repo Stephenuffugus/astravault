@@ -6,6 +6,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { useRouter } from 'expo-router';
 import CelestialCanvas from '@/components/sky/CelestialCanvas';
 import {
   atpFor,
@@ -13,7 +14,8 @@ import {
   RARITY_META,
   type CelestialObject,
 } from '@/data/catalog';
-import { useCollection, useToast } from '@/stores';
+import { useCollection, useMeteorCaptures, useToast } from '@/stores';
+import { triggerCapture } from '@/services/meteor/captureEngine';
 import { colors, radii, spacing, typography } from '@/theme/tokens';
 import { formatDec, formatRA } from '@/services/astro';
 
@@ -22,8 +24,23 @@ export default function ScanScreen() {
   const collect = useCollection((s) => s.collect);
   const isCollected = useCollection((s) => s.isCollected);
   const showToast = useToast((s) => s.show);
+  const captureCount = useMeteorCaptures((s) => s.captures.length);
+  const router = useRouter();
 
   const [selected, setSelected] = useState<CelestialObject | null>(null);
+  const [capturing, setCapturing] = useState(false);
+
+  const handleCapture = useCallback(async () => {
+    if (capturing) return;
+    setCapturing(true);
+    const record = await triggerCapture('manual_tap');
+    setCapturing(false);
+    if (record) {
+      showToast('+10 ATP — Moment captured, cross-referencing GMN…', 'atp');
+    } else {
+      showToast('Location needed for capture — grant permission', 'error');
+    }
+  }, [capturing, showToast]);
 
   const handleSelect = useCallback((object: CelestialObject) => {
     setSelected(object);
@@ -47,6 +64,36 @@ export default function ScanScreen() {
         isCollected={isCollected}
         key={Object.keys(collected).length}
       />
+
+      <View style={styles.captureBar} pointerEvents="box-none">
+        <Pressable
+          onPress={handleCapture}
+          disabled={capturing}
+          accessibilityRole="button"
+          accessibilityLabel="Capture moment"
+          style={({ pressed }) => [
+            styles.captureButton,
+            capturing ? styles.captureButtonBusy : null,
+            pressed ? styles.captureButtonPressed : null,
+          ]}
+        >
+          <Text style={styles.captureGlyph}>📸</Text>
+          <Text style={styles.captureText}>
+            {capturing ? 'CAPTURING…' : 'CAPTURE MOMENT'}
+          </Text>
+        </Pressable>
+        <Pressable
+          onPress={() => router.push('/captures')}
+          accessibilityRole="button"
+          accessibilityLabel="View captures"
+          style={({ pressed }) => [
+            styles.capturesLink,
+            pressed ? styles.captureButtonPressed : null,
+          ]}
+        >
+          <Text style={styles.capturesLinkText}>{captureCount} ▸</Text>
+        </Pressable>
+      </View>
 
       <Modal
         visible={selected !== null}
@@ -172,6 +219,59 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.scannerClear,
+  },
+  captureBar: {
+    position: 'absolute',
+    bottom: 20,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 10,
+    paddingHorizontal: spacing.pageX,
+  },
+  captureButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: radii.pillLarge,
+    borderWidth: 1,
+    borderColor: 'rgba(251,191,36,0.45)',
+    backgroundColor: 'rgba(8,12,25,0.92)',
+  },
+  captureButtonBusy: {
+    opacity: 0.6,
+    borderColor: 'rgba(96,165,250,0.45)',
+  },
+  captureButtonPressed: {
+    opacity: 0.7,
+  },
+  captureGlyph: {
+    fontSize: 16,
+  },
+  captureText: {
+    fontSize: 12,
+    color: colors.accent.gold,
+    fontFamily: typography.fonts.monoMedium,
+    fontWeight: '700',
+    letterSpacing: 2,
+  },
+  capturesLink: {
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: radii.pill,
+    borderWidth: 1,
+    borderColor: colors.cardBorder,
+    backgroundColor: 'rgba(8,12,25,0.85)',
+  },
+  capturesLinkText: {
+    fontSize: 11,
+    color: colors.text.muted,
+    fontFamily: typography.fonts.monoMedium,
+    letterSpacing: 1,
   },
   backdrop: {
     flex: 1,

@@ -22,6 +22,8 @@ import {
   skyViewImageUrl,
   type SkyViewSurvey,
 } from '@/services/apis/skyView';
+import { hipsSurveyForSkyViewApiName } from '@/services/apis/hipsSurveys';
+import { AladinSky } from '@/components/sky/AladinSky';
 import { useCollection, useToast } from '@/stores';
 import { colors, radii, spacing, typography } from '@/theme/tokens';
 
@@ -51,6 +53,12 @@ export default function ObjectDetailScreen() {
 
   const [activeSurvey, setActiveSurvey] = useState<SkyViewSurvey>(defaultSurvey);
   const [imageLoading, setImageLoading] = useState(true);
+  const [deepZoom, setDeepZoom] = useState(false);
+
+  const hipsSurvey = useMemo(
+    () => hipsSurveyForSkyViewApiName(activeSurvey.apiName),
+    [activeSurvey.apiName]
+  );
 
   const skyViewUri = useMemo(
     () =>
@@ -89,25 +97,35 @@ export default function ObjectDetailScreen() {
         <>
           <SectionLabel>MULTI-SPECTRUM VIEW</SectionLabel>
           <Card style={styles.spectrumCard}>
-            <View
-              style={[
-                styles.spectrumImageWrap,
-                { borderColor: activeSurvey.accentColor + '33' },
-              ]}
-            >
-              <Image
-                key={skyViewUri}
-                source={{ uri: skyViewUri }}
-                style={[
-                  styles.spectrumImage,
-                  imageLoading ? styles.spectrumImageLoading : null,
-                ]}
-                resizeMode="cover"
-                onLoadStart={() => setImageLoading(true)}
-                onLoadEnd={() => setImageLoading(false)}
-                accessibilityLabel={`${object.name} in ${activeSurvey.label} (${activeSurvey.apiName})`}
+            {deepZoom ? (
+              <AladinSky
+                ra={object.ra}
+                dec={object.dec}
+                survey={hipsSurvey.id}
+                accentColor={activeSurvey.accentColor}
+                height={280}
               />
-            </View>
+            ) : (
+              <View
+                style={[
+                  styles.spectrumImageWrap,
+                  { borderColor: activeSurvey.accentColor + '33' },
+                ]}
+              >
+                <Image
+                  key={skyViewUri}
+                  source={{ uri: skyViewUri }}
+                  style={[
+                    styles.spectrumImage,
+                    imageLoading ? styles.spectrumImageLoading : null,
+                  ]}
+                  resizeMode="cover"
+                  onLoadStart={() => setImageLoading(true)}
+                  onLoadEnd={() => setImageLoading(false)}
+                  accessibilityLabel={`${object.name} in ${activeSurvey.label} (${activeSurvey.apiName})`}
+                />
+              </View>
+            )}
 
             <View style={styles.spectrumPillRow}>
               {SURVEYS.map((s) => (
@@ -122,8 +140,38 @@ export default function ObjectDetailScreen() {
               ))}
             </View>
 
+            <Pressable
+              onPress={() => setDeepZoom((v) => !v)}
+              style={[
+                styles.deepZoomToggle,
+                {
+                  borderColor: activeSurvey.accentColor + (deepZoom ? '66' : '22'),
+                  backgroundColor: deepZoom
+                    ? activeSurvey.accentColor + '14'
+                    : 'transparent',
+                },
+              ]}
+              accessibilityRole="button"
+              accessibilityLabel={
+                deepZoom
+                  ? 'Switch back to static multi-spectrum image'
+                  : 'Open interactive Aladin Lite deep zoom view'
+              }
+            >
+              <Text
+                style={[
+                  styles.deepZoomLabel,
+                  { color: deepZoom ? activeSurvey.accentColor : colors.text.muted },
+                ]}
+              >
+                {deepZoom ? '▴  DEEP ZOOM (ALADIN) · ON' : '▾  DEEP ZOOM (ALADIN)'}
+              </Text>
+            </Pressable>
+
             <Text style={styles.spectrumCaption}>
-              {activeSurvey.spectrum} — {activeSurvey.apiName}
+              {deepZoom
+                ? `${hipsSurvey.spectrum} — HiPS ${hipsSurvey.id} · ${hipsSurvey.attribution}`
+                : `${activeSurvey.spectrum} — ${activeSurvey.apiName}`}
             </Text>
           </Card>
         </>
@@ -249,6 +297,19 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 6,
     marginBottom: 10,
+  },
+  deepZoomToggle: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: radii.pill,
+    borderWidth: 1,
+    marginBottom: 10,
+  },
+  deepZoomLabel: {
+    fontSize: 10,
+    fontFamily: typography.fonts.monoMedium,
+    letterSpacing: 1.5,
   },
   spectrumCaption: {
     fontSize: 11,

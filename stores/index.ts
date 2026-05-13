@@ -5,12 +5,14 @@ export { useEvents } from './useEvents';
 export { useToast } from './useToast';
 export { useObservationTimer, endObservationSession } from './useObservationTimer';
 export { useBortle, type BortleReport } from './useBortle';
+export { useMeteorCaptures, type MeteorCaptureState } from './useMeteorCaptures';
 
 import { useAcademy } from './useAcademy';
 import { useAtp } from './useAtp';
 import { useBortle } from './useBortle';
 import { useCollection } from './useCollection';
 import { useEvents } from './useEvents';
+import { useMeteorCaptures } from './useMeteorCaptures';
 
 /** Hydrate all persisted stores from AsyncStorage. Call once at app start. */
 export const hydrateAllStores = async (): Promise<void> => {
@@ -20,5 +22,6 @@ export const hydrateAllStores = async (): Promise<void> => {
     useAcademy.getState().hydrate(),
     useEvents.getState().hydrate(),
     useBortle.getState().hydrate(),
+    useMeteorCaptures.getState().hydrate(),
   ]);
 };

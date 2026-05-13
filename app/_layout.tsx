@@ -95,6 +95,10 @@ export default function RootLayout() {
                 name="bortle"
                 options={{ presentation: 'modal' }}
               />
+              <Stack.Screen
+                name="captures"
+                options={{ presentation: 'card' }}
+              />
             </Stack>
           </View>
           <Toast message={toastMessage} variant={toastVariant} />

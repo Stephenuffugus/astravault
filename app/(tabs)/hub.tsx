@@ -24,8 +24,13 @@ import {
   isIssOverhead,
   type IssPosition,
 } from '@/services/apis/issTracker';
+import {
+  fetchUpcomingLaunches,
+  nextLaunchInMs,
+  type UpcomingLaunch,
+} from '@/services/apis/launchLibrary';
 import { useLocation } from '@/services/location';
-import { useBortle, useToast } from '@/stores';
+import { useBortle, useMeteorCaptures, useToast } from '@/stores';
 import ObservationTimer from '@/components/widgets/ObservationTimer';
 import { colors, radii, spacing, typography } from '@/theme/tokens';
 
@@ -68,9 +73,12 @@ export default function HubScreen() {
   const { location } = useLocation();
   const apod = useApod();
   const iss = useIss();
+  const launches = useUpcomingLaunches();
   const router = useRouter();
   const bortleCount = useBortle((s) => s.reports.length);
   const lastBortle = useBortle((s) => s.reports[0]);
+  const captureCount = useMeteorCaptures((s) => s.captures.length);
+  const lastCapture = useMeteorCaptures((s) => s.captures[0]);
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
@@ -134,6 +142,11 @@ export default function HubScreen() {
       </Card>
 
       <Card>
+        <SectionLabel>Upcoming Launches</SectionLabel>
+        <LaunchesPanel launches={launches} now={now} />
+      </Card>
+
+      <Card>
         <SectionLabel>ISS Live Tracker</SectionLabel>
         <IssPanel
           iss={iss}
@@ -161,6 +174,23 @@ export default function HubScreen() {
           </Card>
         )}
       </Pressable>
+
+      {captureCount > 0 ? (
+        <Pressable onPress={() => router.push('/captures')} accessibilityRole="button">
+          {({ pressed }) => (
+            <Card style={pressed ? styles.pressed : undefined}>
+              <SectionLabel color={colors.accent.orange}>Moment Captures</SectionLabel>
+              <Text style={styles.bortleTitle}>
+                {captureCount} capture{captureCount === 1 ? '' : 's'}
+                {lastCapture?.crossReferences.gmnMatch
+                  ? ` · last matched ${lastCapture.crossReferences.showerName ?? 'GMN'}`
+                  : ''}
+              </Text>
+              <Text style={styles.bortleSub}>Tap to review · GMN cross-reference results</Text>
+            </Card>
+          )}
+        </Pressable>
+      ) : null}
 
       <ObservationTimer />
     </ScrollView>
@@ -251,6 +281,140 @@ function ApodPanel({ apod }: { apod: ApodState }) {
       <Text style={styles.apodBody} numberOfLines={4}>
         {entry.explanation}
       </Text>
+    </View>
+  );
+}
+
+interface LaunchesState {
+  status: 'idle' | 'loading' | 'ready' | 'error';
+  launches: UpcomingLaunch[];
+  error: string | null;
+}
+
+function useUpcomingLaunches(): LaunchesState {
+  const [state, setState] = useState<LaunchesState>({
+    status: 'loading',
+    launches: [],
+    error: null,
+  });
+  useEffect(() => {
+    let cancelled = false;
+    fetchUpcomingLaunches(5)
+      .then((launches) => {
+        if (!cancelled) setState({ status: 'ready', launches, error: null });
+      })
+      .catch((e: unknown) => {
+        if (cancelled) return;
+        const msg = e instanceof Error ? e.message : 'Launch feed unavailable';
+        setState({ status: 'error', launches: [], error: msg });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  return state;
+}
+
+function formatLaunchCountdown(ms: number): string {
+  if (ms <= 0) return 'LIFTOFF';
+  if (ms < 24 * 3_600_000) {
+    const totalSec = Math.floor(ms / 1000);
+    const h = Math.floor(totalSec / 3600);
+    const m = Math.floor((totalSec % 3600) / 60);
+    const s = totalSec % 60;
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    return `T-${pad(h)}:${pad(m)}:${pad(s)}`;
+  }
+  const days = Math.floor(ms / 86_400_000);
+  const hours = Math.floor((ms % 86_400_000) / 3_600_000);
+  return `In ${days}d ${hours}h`;
+}
+
+function launchStatusVariant(status: string): BadgeVariant {
+  switch (status) {
+    case 'go':
+      return 'green';
+    case 'hold':
+      return 'red';
+    case 'tbc':
+    case 'tbd':
+      return 'gold';
+    default:
+      return 'neutral';
+  }
+}
+
+function LaunchesPanel({
+  launches,
+  now,
+}: {
+  launches: LaunchesState;
+  now: Date;
+}) {
+  if (launches.status === 'loading') {
+    return (
+      <View style={styles.launchLoading}>
+        <View style={styles.shimmer} />
+        <Text style={styles.apodSub}>Loading launch manifest…</Text>
+      </View>
+    );
+  }
+  if (launches.status === 'error' || launches.launches.length === 0) {
+    return (
+      <View style={styles.issRow}>
+        <View style={[styles.issDot, styles.issDotErr]} />
+        <Text style={styles.issText}>
+          {launches.status === 'error'
+            ? 'Launch feed offline'
+            : 'No launches scheduled'}
+        </Text>
+      </View>
+    );
+  }
+  const top = launches.launches.slice(0, 3);
+  return (
+    <View style={styles.launchList}>
+      {top.map((launch, idx) => {
+        const ms = nextLaunchInMs(launch, now);
+        const variant = launchStatusVariant(launch.status);
+        const missionName = launch.mission?.name ?? 'TBD';
+        const isLast = idx === top.length - 1;
+        return (
+          <View
+            key={launch.id}
+            style={[styles.launchRow, isLast ? styles.launchRowLast : null]}
+          >
+            <View style={styles.launchLogoWrap}>
+              {launch.provider.logoUrl ? (
+                <Image
+                  source={{ uri: launch.provider.logoUrl }}
+                  style={styles.launchLogo}
+                  resizeMode="contain"
+                  accessibilityLabel={launch.provider.name}
+                />
+              ) : (
+                <View style={styles.launchLogoFallback}>
+                  <Text style={styles.launchLogoInitial}>
+                    {launch.provider.name.charAt(0)}
+                  </Text>
+                </View>
+              )}
+            </View>
+            <View style={styles.flex1}>
+              <Text style={styles.launchMission} numberOfLines={1}>
+                {missionName}
+              </Text>
+              <Text style={styles.launchProvider} numberOfLines={1}>
+                {launch.provider.name} · {launch.rocket.name}
+              </Text>
+              <Text style={styles.launchCountdown}>
+                {formatLaunchCountdown(ms)}
+              </Text>
+            </View>
+            <Badge variant={variant}>{launch.status.toUpperCase()}</Badge>
+          </View>
+        );
+      })}
     </View>
   );
 }
@@ -509,5 +673,55 @@ const styles = StyleSheet.create({
     color: colors.text.muted,
     fontFamily: t.fonts.mono,
     letterSpacing: t.letterSpacing.label,
+  },
+  launchLoading: { alignItems: 'center', paddingVertical: 14, gap: 8 },
+  launchList: { gap: 12 },
+  launchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.cardBorder,
+  },
+  launchRowLast: { borderBottomWidth: 0, paddingBottom: 0 },
+  launchLogoWrap: {
+    width: 36,
+    height: 36,
+    borderRadius: radii.button,
+    backgroundColor: 'rgba(255,255,255,0.04)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  launchLogo: { width: 30, height: 30 },
+  launchLogoFallback: {
+    width: 36,
+    height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  launchLogoInitial: {
+    fontSize: t.size.body,
+    color: colors.text.muted,
+    fontFamily: t.fonts.heading,
+  },
+  launchMission: {
+    fontSize: t.size.body,
+    color: colors.text.primary,
+    fontFamily: t.fonts.bodyBold,
+  },
+  launchProvider: {
+    fontSize: t.size.label,
+    color: colors.text.muted,
+    fontFamily: t.fonts.mono,
+    marginTop: 1,
+  },
+  launchCountdown: {
+    fontSize: t.size.label,
+    color: colors.accent.blue,
+    fontFamily: t.fonts.monoMedium,
+    letterSpacing: t.letterSpacing.label,
+    marginTop: 3,
   },
 });

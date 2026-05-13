@@ -1,0 +1,103 @@
+{
+  "_comment": "Sample response from the GMN REST API (Datasette). Endpoint: https://explore.globalmeteornetwork.org/gmn_rest_api/meteor_summary. License: CC BY 4.0 (Global Meteor Network). Hand-curated to mirror the verified schema documented at https://gmn-python-api.readthedocs.io/en/latest/data_schemas.html — column names and shapes match the live REST output but the row values are synthetic placeholders chosen from the 2022-12-14 Geminids peak window for offline dev/test. Do NOT use these rows for any scientific claim.",
+  "ok": true,
+  "truncated": false,
+  "rows": [
+    {
+      "unique_trajectory_identifier": "20221214052010_D0GX2",
+      "beginning_utc_time": "2022-12-14 05:20:10.123",
+      "beginning_julian_date": 2459927.7223,
+      "iau_code": "GEM",
+      "iau_no": 4,
+      "rageo_deg": 113.5,
+      "decgeo_deg": 32.4,
+      "vgeo_km_s": 33.8,
+      "num_stat": 5,
+      "participating_stations": "US0001,US0002,CA0003,CA0004,US0008"
+    },
+    {
+      "unique_trajectory_identifier": "20221214053422_K7P3M",
+      "beginning_utc_time": "2022-12-14 05:34:22.451",
+      "beginning_julian_date": 2459927.7322,
+      "iau_code": "GEM",
+      "iau_no": 4,
+      "rageo_deg": 112.9,
+      "decgeo_deg": 32.6,
+      "vgeo_km_s": 34.1,
+      "num_stat": 3,
+      "participating_stations": "US0008,US0011,US0014"
+    },
+    {
+      "unique_trajectory_identifier": "20221214061134_F2NW9",
+      "beginning_utc_time": "2022-12-14 06:11:34.802",
+      "beginning_julian_date": 2459927.7580,
+      "iau_code": "MON",
+      "iau_no": 19,
+      "rageo_deg": 100.1,
+      "decgeo_deg": 13.7,
+      "vgeo_km_s": 41.2,
+      "num_stat": 2,
+      "participating_stations": "US0002,US0008"
+    },
+    {
+      "unique_trajectory_identifier": "20221214062845_Q8JL4",
+      "beginning_utc_time": "2022-12-14 06:28:45.220",
+      "beginning_julian_date": 2459927.7700,
+      "iau_code": null,
+      "iau_no": null,
+      "rageo_deg": 87.4,
+      "decgeo_deg": 24.0,
+      "vgeo_km_s": 23.6,
+      "num_stat": 2,
+      "participating_stations": "CA0003,CA0006"
+    },
+    {
+      "unique_trajectory_identifier": "20221214070512_R1XE6",
+      "beginning_utc_time": "2022-12-14 07:05:12.700",
+      "beginning_julian_date": 2459927.7953,
+      "iau_code": "GEM",
+      "iau_no": 4,
+      "rageo_deg": 113.2,
+      "decgeo_deg": 32.5,
+      "vgeo_km_s": 33.5,
+      "num_stat": 4,
+      "participating_stations": "US0008,US0011,US0014,US0017"
+    },
+    {
+      "unique_trajectory_identifier": "20221214073301_S9MV2",
+      "beginning_utc_time": "2022-12-14 07:33:01.018",
+      "beginning_julian_date": 2459927.8146,
+      "iau_code": "GEM",
+      "iau_no": 4,
+      "rageo_deg": 113.7,
+      "decgeo_deg": 32.2,
+      "vgeo_km_s": 34.4,
+      "num_stat": 6,
+      "participating_stations": "US0001,US0002,US0008,US0011,CA0003,CA0006"
+    },
+    {
+      "unique_trajectory_identifier": "20221214081522_T4HK8",
+      "beginning_utc_time": "2022-12-14 08:15:22.337",
+      "beginning_julian_date": 2459927.8440,
+      "iau_code": "SCC",
+      "iau_no": 731,
+      "rageo_deg": 60.3,
+      "decgeo_deg": -5.1,
+      "vgeo_km_s": 27.0,
+      "num_stat": 2,
+      "participating_stations": "US0014,US0017"
+    },
+    {
+      "unique_trajectory_identifier": "20221214085011_W2BC3",
+      "beginning_utc_time": "2022-12-14 08:50:11.601",
+      "beginning_julian_date": 2459927.8683,
+      "iau_code": "GEM",
+      "iau_no": 4,
+      "rageo_deg": 114.0,
+      "decgeo_deg": 32.7,
+      "vgeo_km_s": 33.9,
+      "num_stat": 3,
+      "participating_stations": "US0002,CA0003,CA0004"
+    }
+  ]
+}
