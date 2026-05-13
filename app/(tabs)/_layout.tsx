@@ -1,0 +1,204 @@
+import React from 'react';
+import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Tabs } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useAcademy, useAtp } from '@/stores';
+import { totalLessons } from '@/data/academy';
+import { colors, spacing, typography } from '@/theme/tokens';
+
+type TabIconName = React.ComponentProps<typeof Ionicons>['name'];
+
+export default function TabsLayout() {
+  const insets = useSafeAreaInsets();
+  const balance = useAtp((s) => s.balance);
+  const completedCount = useAcademy((s) => Object.keys(s.completedLessonIds).length);
+
+  return (
+    <View style={styles.frame}>
+      <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
+        <View style={styles.headerLeft}>
+          <View style={styles.logoBadge}>
+            <Text style={styles.logoGlyph}>✦</Text>
+          </View>
+          <View>
+            <Text style={styles.title}>ASTRA VAULT</Text>
+            <Text style={styles.subtitle}>v0.1 · production build</Text>
+          </View>
+        </View>
+        <View style={styles.headerRight}>
+          <View style={[styles.pill, styles.pillGold]}>
+            <Text style={styles.pillTextGold}>{balance.toLocaleString()} ATP</Text>
+          </View>
+          <View style={[styles.pill, styles.pillPurple]}>
+            <Text style={styles.pillTextPurple}>
+              {completedCount}/{totalLessons}
+            </Text>
+          </View>
+        </View>
+      </View>
+
+      <Tabs
+        screenOptions={{
+          headerShown: false,
+          tabBarShowLabel: true,
+          tabBarStyle: [
+            styles.tabBar,
+            { paddingBottom: Math.max(insets.bottom, 6) },
+          ],
+          tabBarActiveTintColor: colors.accent.blue,
+          tabBarInactiveTintColor: 'rgba(160,180,210,0.35)',
+          tabBarLabelStyle: styles.tabLabel,
+          sceneStyle: { backgroundColor: 'transparent' },
+        }}
+      >
+        <Tabs.Screen
+          name="hub"
+          options={{
+            title: 'Hub',
+            tabBarLabel: 'HUB',
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name={('compass-outline' satisfies TabIconName)} color={color} size={size} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="scan"
+          options={{
+            title: 'Scan',
+            tabBarLabel: 'SCAN',
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name={('scan-circle-outline' satisfies TabIconName)} color={color} size={size + 2} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="vault"
+          options={{
+            title: 'Vault',
+            tabBarLabel: 'VAULT',
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name={('diamond-outline' satisfies TabIconName)} color={color} size={size} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="shared-sky"
+          options={{
+            title: 'Shared Sky',
+            tabBarLabel: 'SHARED',
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name={('earth-outline' satisfies TabIconName)} color={color} size={size} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="learn"
+          options={{
+            title: 'Learn',
+            tabBarLabel: 'LEARN',
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name={('school-outline' satisfies TabIconName)} color={color} size={size} />
+            ),
+          }}
+        />
+      </Tabs>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  frame: {
+    flex: 1,
+    backgroundColor: 'transparent',
+  },
+  header: {
+    paddingHorizontal: spacing.pageX,
+    paddingBottom: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: colors.headerBg,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.03)',
+    ...(Platform.OS === 'web'
+      ? ({ backdropFilter: 'blur(14px)' } as object)
+      : null),
+  },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  logoBadge: {
+    width: 26,
+    height: 26,
+    borderRadius: 6,
+    backgroundColor: 'rgba(96,165,250,0.18)',
+    borderWidth: 1,
+    borderColor: 'rgba(192,132,252,0.25)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logoGlyph: {
+    color: colors.text.primary,
+    fontSize: 14,
+  },
+  title: {
+    fontSize: typography.size.appTitle,
+    letterSpacing: typography.letterSpacing.title,
+    fontFamily: typography.fonts.monoMedium,
+    color: colors.text.primary,
+    fontWeight: '700',
+  },
+  subtitle: {
+    fontSize: 7,
+    letterSpacing: 1.5,
+    color: 'rgba(160,180,210,0.3)',
+    fontFamily: typography.fonts.mono,
+    marginTop: 2,
+  },
+  headerRight: {
+    flexDirection: 'row',
+    gap: 6,
+    alignItems: 'center',
+  },
+  pill: {
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 10,
+    borderWidth: 1,
+  },
+  pillGold: {
+    backgroundColor: 'rgba(251,191,36,0.06)',
+    borderColor: 'rgba(251,191,36,0.12)',
+  },
+  pillPurple: {
+    backgroundColor: 'rgba(192,132,252,0.06)',
+    borderColor: 'rgba(192,132,252,0.12)',
+  },
+  pillTextGold: {
+    fontSize: 10,
+    color: colors.accent.gold,
+    fontFamily: typography.fonts.monoMedium,
+    fontWeight: '600',
+  },
+  pillTextPurple: {
+    fontSize: 10,
+    color: colors.accent.purple,
+    fontFamily: typography.fonts.monoMedium,
+    fontWeight: '600',
+  },
+  tabBar: {
+    backgroundColor: colors.navBg,
+    borderTopColor: 'rgba(255,255,255,0.03)',
+    borderTopWidth: 1,
+    height: 64,
+  },
+  tabLabel: {
+    fontSize: 8,
+    letterSpacing: 1.5,
+    fontFamily: typography.fonts.mono,
+    marginBottom: 2,
+  },
+});

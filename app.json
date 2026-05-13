@@ -1,0 +1,58 @@
+{
+  "expo": {
+    "name": "Astra Vault",
+    "slug": "astra-vault",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "astravault",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "splash": {
+      "backgroundColor": "#02030b",
+      "resizeMode": "contain"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "io.sws.astravault",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Astra Vault uses the camera for meteor and event capture. Captures are time-synced and geotagged to cross-reference with professional astronomy networks (CAMS).",
+        "NSMicrophoneUsageDescription": "Astra Vault uses the microphone for voice-trigger meteor capture (say \"METEOR\" to capture without looking at the screen).",
+        "NSLocationWhenInUseUsageDescription": "Astra Vault uses your location to compute visible objects, observing conditions, and to cross-reference your meteor sightings with professional networks.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Astra Vault uses location during active observation sessions for meteor cross-referencing and event tracking.",
+        "NSMotionUsageDescription": "Astra Vault uses motion sensors to determine where your phone is pointed for sky alignment and capture orientation."
+      },
+      "userInterfaceStyle": "dark"
+    },
+    "android": {
+      "package": "io.sws.astravault",
+      "adaptiveIcon": {
+        "backgroundColor": "#02030b"
+      },
+      "userInterfaceStyle": "dark",
+      "permissions": [
+        "CAMERA",
+        "RECORD_AUDIO",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "WAKE_LOCK"
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "gameId": "astra_vault",
+      "firebaseProjectId": "focus-grove-fffa8"
+    }
+  }
+}
