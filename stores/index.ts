@@ -3,9 +3,12 @@ export { useCollection } from './useCollection';
 export { useAcademy } from './useAcademy';
 export { useEvents } from './useEvents';
 export { useToast } from './useToast';
+export { useObservationTimer, endObservationSession } from './useObservationTimer';
+export { useBortle, type BortleReport } from './useBortle';
 
 import { useAcademy } from './useAcademy';
 import { useAtp } from './useAtp';
+import { useBortle } from './useBortle';
 import { useCollection } from './useCollection';
 import { useEvents } from './useEvents';
 
@@ -16,5 +19,6 @@ export const hydrateAllStores = async (): Promise<void> => {
     useCollection.getState().hydrate(),
     useAcademy.getState().hydrate(),
     useEvents.getState().hydrate(),
+    useBortle.getState().hydrate(),
   ]);
 };

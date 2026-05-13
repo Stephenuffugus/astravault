@@ -1,5 +1,12 @@
-import React from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useMemo, useState } from 'react';
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import {
   CATALOG,
@@ -8,7 +15,13 @@ import {
   atpFor,
 } from '@/data/catalog';
 import { formatDec, formatRA } from '@/services/astro';
-import { Card, SectionLabel } from '@/components/common';
+import { Card, Pill, SectionLabel } from '@/components/common';
+import {
+  SURVEYS,
+  defaultSurvey,
+  skyViewImageUrl,
+  type SkyViewSurvey,
+} from '@/services/apis/skyView';
 import { useCollection, useToast } from '@/stores';
 import { colors, radii, spacing, typography } from '@/theme/tokens';
 
@@ -34,6 +47,20 @@ export default function ObjectDetailScreen() {
 
   const rarity = RARITY_META[object.rarity];
   const collected = isCollected(object.id);
+  const isPlanet = object.category === 'planet';
+
+  const [activeSurvey, setActiveSurvey] = useState<SkyViewSurvey>(defaultSurvey);
+  const [imageLoading, setImageLoading] = useState(true);
+
+  const skyViewUri = useMemo(
+    () =>
+      skyViewImageUrl({
+        ra: object.ra,
+        dec: object.dec,
+        surveyApiName: activeSurvey.apiName,
+      }),
+    [object.ra, object.dec, activeSurvey.apiName]
+  );
 
   const onCollect = async () => {
     const added = await collect(object);
@@ -57,6 +84,50 @@ export default function ObjectDetailScreen() {
       <Card style={styles.descriptionCard}>
         <Text style={styles.description}>{object.description}</Text>
       </Card>
+
+      {!isPlanet && (
+        <>
+          <SectionLabel>MULTI-SPECTRUM VIEW</SectionLabel>
+          <Card style={styles.spectrumCard}>
+            <View
+              style={[
+                styles.spectrumImageWrap,
+                { borderColor: activeSurvey.accentColor + '33' },
+              ]}
+            >
+              <Image
+                key={skyViewUri}
+                source={{ uri: skyViewUri }}
+                style={[
+                  styles.spectrumImage,
+                  imageLoading ? styles.spectrumImageLoading : null,
+                ]}
+                resizeMode="cover"
+                onLoadStart={() => setImageLoading(true)}
+                onLoadEnd={() => setImageLoading(false)}
+                accessibilityLabel={`${object.name} in ${activeSurvey.label} (${activeSurvey.apiName})`}
+              />
+            </View>
+
+            <View style={styles.spectrumPillRow}>
+              {SURVEYS.map((s) => (
+                <Pill
+                  key={s.id}
+                  active={s.id === activeSurvey.id}
+                  accent={s.accentColor}
+                  onPress={() => setActiveSurvey(s)}
+                >
+                  {s.label}
+                </Pill>
+              ))}
+            </View>
+
+            <Text style={styles.spectrumCaption}>
+              {activeSurvey.spectrum} — {activeSurvey.apiName}
+            </Text>
+          </Card>
+        </>
+      )}
 
       <SectionLabel>Coordinates & Data</SectionLabel>
       <Card style={styles.dataCard}>
@@ -155,6 +226,35 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     color: colors.text.muted,
     fontFamily: typography.fonts.body,
+  },
+  spectrumCard: { marginBottom: 18 },
+  spectrumImageWrap: {
+    width: '100%',
+    height: 280,
+    borderRadius: radii.card,
+    overflow: 'hidden',
+    backgroundColor: 'rgba(255,255,255,0.03)',
+    borderWidth: 1,
+    marginBottom: 12,
+  },
+  spectrumImage: {
+    width: '100%',
+    height: '100%',
+  },
+  spectrumImageLoading: {
+    opacity: 0.25,
+  },
+  spectrumPillRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+    marginBottom: 10,
+  },
+  spectrumCaption: {
+    fontSize: 11,
+    color: colors.text.ghost,
+    fontFamily: typography.fonts.mono,
+    letterSpacing: 1,
   },
   dataCard: { marginBottom: 20 },
   dataRow: {
