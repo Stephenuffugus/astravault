@@ -19,6 +19,8 @@
 
 import * as Crypto from 'expo-crypto';
 
+import type { PlateSolveResult } from './plateSolve';
+
 /** UTC milliseconds, anchored to GNSS-derived clock when available. */
 export type UTCMillis = number;
 
@@ -116,6 +118,12 @@ export interface MomentCaptureRecord {
   observerFingerprint: string;
   /** Hash of the attention event that earned ATP for this capture. */
   attentionHash: string | null;
+  /**
+   * Plate-solve result — predicted RA/Dec of frame center plus confidence
+   * score used to gate ATP earn (patent #4). v0.1 is metadata-based;
+   * future versions populate this from pixel-analysis or astrometry.net.
+   */
+  plateSolve: PlateSolveResult | null;
   /** Cross-reference state — populated by the server when match candidates appear. */
   crossReferences: CrossReferenceState;
   /** When this record was created and last touched. */
@@ -181,6 +189,7 @@ export const newCaptureRecord = (params: {
     note: null,
     observerFingerprint: params.observerFingerprint,
     attentionHash: null,
+    plateSolve: null,
     crossReferences: emptyCrossReferences(),
     createdAt: now,
     updatedAt: now,

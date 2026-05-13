@@ -33,8 +33,10 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { angularDistance, type EquatorialCoordinate } from '@/services/astro/coordinates';
-import { toJulianDate } from '@/services/astro/julian';
+import {
+  angularSeparationHorizontal,
+  radiantToAltAz,
+} from '@/services/astro/horizontal';
 
 const GMN_BASE_URL = 'https://explore.globalmeteornetwork.org/gmn_rest_api';
 const GMN_METEOR_SUMMARY_URL = `${GMN_BASE_URL}/meteor_summary`;
@@ -131,7 +133,7 @@ export const findGmnMatches = async (params: {
       observerLocation,
       observationAt,
     );
-    const sep = angularSeparation(
+    const sep = angularSeparationHorizontal(
       radiantHoriz,
       { azimuth: observerPose.bearing, altitude: observerPose.elevation },
     );
@@ -387,86 +389,6 @@ const writeCache = async (key: string, data: GmnMatch[]): Promise<void> => {
     // Cache write failures should not fail the request.
   }
 };
-
-// --------------------------------------------------------------------------
-// Internal: radiant → horizontal coords
-// --------------------------------------------------------------------------
-
-interface HorizontalCoordinate {
-  /** Compass bearing from true north, degrees east. 0–360. */
-  azimuth: number;
-  /** Elevation above the horizon, degrees. -90 to +90. */
-  altitude: number;
-}
-
-/**
- * Convert an equatorial radiant (RA, Dec, J2000-ish) to horizontal coords
- * (azimuth, altitude) at the observer's location and time. We use a simple
- * mean-sidereal-time transform — accurate to better than 1° in azimuth and
- * altitude, which is well inside the angular-tolerance budget for a phone-
- * pose match.
- *
- * Formulas: Meeus, "Astronomical Algorithms", chapter 13.
- */
-export const radiantToAltAz = (
-  radiant: EquatorialCoordinate,
-  observer: { lat: number; lng: number },
-  whenUtcMs: number,
-): HorizontalCoordinate => {
-  const rad = Math.PI / 180;
-  const jd = toJulianDate(new Date(whenUtcMs));
-
-  // Greenwich Mean Sidereal Time (degrees). Meeus eq. 12.4 (low-precision).
-  const t = (jd - 2451545.0) / 36525;
-  const gmstDeg =
-    280.46061837 +
-    360.98564736629 * (jd - 2451545.0) +
-    0.000387933 * t * t -
-    (t * t * t) / 38710000;
-  const gmst = ((gmstDeg % 360) + 360) % 360;
-
-  // Local sidereal time, in degrees. Longitude east-positive.
-  const lst = ((gmst + observer.lng) % 360 + 360) % 360;
-
-  // Hour angle.
-  const ha = ((lst - radiant.ra) % 360 + 360) % 360;
-  const haRad = ha * rad;
-  const decRad = radiant.dec * rad;
-  const latRad = observer.lat * rad;
-
-  const sinAlt =
-    Math.sin(decRad) * Math.sin(latRad) +
-    Math.cos(decRad) * Math.cos(latRad) * Math.cos(haRad);
-  const altitude = Math.asin(clamp(sinAlt, -1, 1)) / rad;
-
-  const cosAlt = Math.cos(Math.asin(clamp(sinAlt, -1, 1)));
-  let azimuth = 0;
-  if (cosAlt > 1e-9) {
-    const sinAz = -Math.cos(decRad) * Math.sin(haRad) / cosAlt;
-    const cosAz =
-      (Math.sin(decRad) - Math.sin(latRad) * sinAlt) / (Math.cos(latRad) * cosAlt);
-    azimuth = Math.atan2(sinAz, cosAz) / rad;
-  }
-  azimuth = ((azimuth % 360) + 360) % 360;
-
-  return { azimuth, altitude };
-};
-
-/** Great-circle separation in degrees between two alt/az points. */
-const angularSeparation = (
-  a: HorizontalCoordinate,
-  b: HorizontalCoordinate,
-): number => {
-  // Reuse the RA/Dec angular distance formula by treating azimuth as RA and
-  // altitude as Dec — same spherical geometry.
-  return angularDistance(
-    { ra: a.azimuth, dec: a.altitude },
-    { ra: b.azimuth, dec: b.altitude },
-  );
-};
-
-const clamp = (n: number, lo: number, hi: number): number =>
-  Math.min(hi, Math.max(lo, n));
 
 // --------------------------------------------------------------------------
 // IAU shower name + parent body lookup

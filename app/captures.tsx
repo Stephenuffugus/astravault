@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { Badge, Card, SectionLabel } from '@/components/common';
 import { GMN_ATTRIBUTION } from '@/services/apis/gmnNetwork';
 import { SONOTACO_ATTRIBUTION } from '@/services/apis/sonotacoNetwork';
+import { formatDec, formatRA } from '@/services/astro';
 import { useMeteorCaptures } from '@/stores';
 import type { MomentCaptureRecord } from '@/services/meteor/captureRecord';
 import { colors, radii, spacing, typography } from '@/theme/tokens';
@@ -94,6 +95,21 @@ function CaptureRow({ record }: { record: MomentCaptureRecord }) {
           resizeMode="cover"
           accessibilityLabel={`Captured frame at ${fmtTime(record.frames[0].capturedAt)}`}
         />
+      ) : null}
+
+      {record.plateSolve ? (
+        <View style={styles.solvePanel}>
+          <Text style={styles.solveLabel}>
+            PLATE-SOLVE · {record.plateSolve.source.replace(/_/g, ' ')}
+          </Text>
+          <Text style={styles.solveRow}>
+            {formatRA(record.plateSolve.raDegrees)}  {formatDec(record.plateSolve.decDegrees)}
+          </Text>
+          <Text style={styles.solveSub}>
+            Confidence {Math.round(record.plateSolve.confidence * 100)}% · ±
+            {Math.round(record.plateSolve.uncertaintyArcsec / 60)}′
+          </Text>
+        </View>
       ) : null}
 
       {cr.showerName ? (
@@ -187,6 +203,34 @@ const styles = StyleSheet.create({
     borderRadius: radii.button,
     backgroundColor: 'rgba(255,255,255,0.03)',
     marginBottom: 8,
+    marginTop: 4,
+  },
+  solvePanel: {
+    marginTop: 6,
+    padding: 10,
+    borderRadius: radii.button,
+    backgroundColor: 'rgba(192,132,252,0.06)',
+    borderWidth: 1,
+    borderColor: 'rgba(192,132,252,0.18)',
+  },
+  solveLabel: {
+    fontSize: t.size.tiny,
+    color: colors.accent.purple,
+    fontFamily: t.fonts.monoMedium,
+    letterSpacing: 2,
+    textTransform: 'uppercase',
+    marginBottom: 4,
+  },
+  solveRow: {
+    fontSize: t.size.body,
+    color: colors.text.secondary,
+    fontFamily: t.fonts.monoMedium,
+    fontWeight: '600',
+  },
+  solveSub: {
+    fontSize: t.size.label,
+    color: colors.text.muted,
+    fontFamily: t.fonts.mono,
     marginTop: 4,
   },
   matchPanel: {

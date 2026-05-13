@@ -64,8 +64,7 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { angularDistance } from '@/services/astro/coordinates';
-import { radiantToAltAz } from '@/services/apis/gmnNetwork';
+import { angularSeparationHorizontal, radiantToAltAz } from '@/services/astro/horizontal';
 
 // --------------------------------------------------------------------------
 // Public surface
@@ -140,9 +139,9 @@ export const findSonotacoMatches = async (params: {
       observerLocation,
       observationAt,
     );
-    const sep = angularDistance(
-      { ra: radiantHoriz.azimuth, dec: radiantHoriz.altitude },
-      { ra: observerPose.bearing, dec: observerPose.elevation },
+    const sep = angularSeparationHorizontal(
+      radiantHoriz,
+      { azimuth: observerPose.bearing, altitude: observerPose.elevation },
     );
     return sep <= angularToleranceDeg;
   });

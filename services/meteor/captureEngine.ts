@@ -29,6 +29,7 @@ import {
   type ObservationLocation,
   type ObserverPose,
 } from './captureRecord';
+import { atpForPlateSolve, runMetadataPlateSolve } from './plateSolve';
 
 export type CaptureTriggerListener = (
   mode: CaptureMode,
@@ -62,8 +63,12 @@ let activeConfig: CaptureEngineConfig = { ...DEFAULT_CONFIG };
 /** Subscriber set. Listeners fire whenever a trigger lands, regardless of mode. */
 const listeners = new Set<CaptureTriggerListener>();
 
-/** Default ATP award for a manual / voice / gesture capture. */
-const CAPTURE_ATP = 10;
+/**
+ * Base ATP award is now plate-solve gated — see services/meteor/plateSolve.ts
+ * `atpForPlateSolve()`. The award scales by confidence: metadata-only default
+ * gets 10, an astrometrically-verified capture gets 25, an unverifiable
+ * gets 2.
+ */
 
 /** Subscribe to capture triggers. Returns an unsubscribe function. */
 export const onCaptureTrigger = (listener: CaptureTriggerListener): (() => void) => {
@@ -125,7 +130,17 @@ export const triggerCapture = async (
     observerFingerprint,
   });
 
-  // Emit the attention hash FIRST so we can stamp it onto the record before
+  // Run the plate-solve BEFORE persisting so the record stores the predicted
+  // RA/Dec and confidence. Patent #4: ATP earn is gated by this confidence.
+  const plateSolve = runMetadataPlateSolve({
+    location: record.location,
+    pose: record.pose,
+    capturedAt: record.triggerAt,
+    frame: null,
+  });
+  record.plateSolve = plateSolve;
+
+  // Emit the attention hash NEXT so we can stamp it onto the record before
   // persisting (the merge protocol pairs observations to ATP events by hash).
   const attention = await emitAttentionEvent({
     eventType: 'meteor_capture',
@@ -137,9 +152,13 @@ export const triggerCapture = async (
 
   await useMeteorCaptures.getState().append(record);
 
+  // Scale the ATP award by plate-solve confidence — patent #4 anti-cheat
+  // gating. Default metadata-only confidence (≈0.55) yields the standard
+  // 10 ATP; future astrometrically-verified captures earn the 25 max.
+  const captureAtp = atpForPlateSolve(plateSolve.confidence);
   await useAtp.getState().earn({
     eventType: 'meteor_capture',
-    amount: CAPTURE_ATP,
+    amount: captureAtp,
     durationMs: 0,
     interactionCount: 1,
     qualityTier: 'deep',
