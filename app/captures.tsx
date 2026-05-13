@@ -3,6 +3,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Badge, Card, SectionLabel } from '@/components/common';
 import { GMN_ATTRIBUTION } from '@/services/apis/gmnNetwork';
+import { SONOTACO_ATTRIBUTION } from '@/services/apis/sonotacoNetwork';
 import { useMeteorCaptures } from '@/stores';
 import type { MomentCaptureRecord } from '@/services/meteor/captureRecord';
 import { colors, radii, spacing, typography } from '@/theme/tokens';
@@ -19,6 +20,7 @@ const fmtCoord = (lat: number, lng: number): string =>
 export default function CapturesScreen() {
   const router = useRouter();
   const captures = useMeteorCaptures((s) => s.captures);
+  const hasSonotacoMatch = captures.some((c) => c.crossReferences.sonotacoMatch);
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
@@ -51,13 +53,16 @@ export default function CapturesScreen() {
       {captures.length > 0 ? (
         <Text style={styles.attribution}>{GMN_ATTRIBUTION}</Text>
       ) : null}
+      {hasSonotacoMatch ? (
+        <Text style={styles.attribution}>{SONOTACO_ATTRIBUTION}</Text>
+      ) : null}
     </ScrollView>
   );
 }
 
 function CaptureRow({ record }: { record: MomentCaptureRecord }) {
   const cr = record.crossReferences;
-  const matched = cr.gmnMatch || cr.camsMatch || cr.amsMatch;
+  const matched = cr.gmnMatch || cr.camsMatch || cr.amsMatch || cr.sonotacoMatch;
 
   return (
     <Card>

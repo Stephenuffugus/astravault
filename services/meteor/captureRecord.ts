@@ -77,6 +77,8 @@ export interface CrossReferenceState {
   camsMatch: boolean;
   gmnMatch: boolean;
   amsMatch: boolean;
+  /** SonotaCo Network (Japan) confirmed this observation. */
+  sonotacoMatch: boolean;
   /** Count of other Astra Vault observers that matched this event. */
   matchedObservers: number;
   /** e.g., "Comet Swift-Tuttle". */
@@ -136,6 +138,7 @@ const emptyCrossReferences = (): CrossReferenceState => ({
   camsMatch: false,
   gmnMatch: false,
   amsMatch: false,
+  sonotacoMatch: false,
   matchedObservers: 0,
   parentBody: null,
   showerName: null,

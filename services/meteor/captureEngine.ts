@@ -16,6 +16,7 @@ import * as Crypto from 'expo-crypto';
 
 import { emitAttentionEvent } from '@/services/attention';
 import { gmnCrossReferenceFor } from '@/services/apis/gmnNetwork';
+import { sonotacoCrossReferenceFor } from '@/services/apis/sonotacoNetwork';
 import { requestLocation } from '@/services/location';
 import { useAtp } from '@/stores/useAtp';
 import { useMeteorCaptures } from '@/stores/useMeteorCaptures';
@@ -23,6 +24,7 @@ import { useMeteorCaptures } from '@/stores/useMeteorCaptures';
 import {
   newCaptureRecord,
   type CaptureMode,
+  type CrossReferenceState,
   type MomentCaptureRecord,
   type ObservationLocation,
   type ObserverPose,
@@ -145,21 +147,53 @@ export const triggerCapture = async (
   return record;
 };
 
-/** Background GMN cross-reference. Updates the persisted record when results arrive. */
+/**
+ * Background cross-reference — queries GMN and SonotaCo in parallel, merges
+ * the partial results into a single `crossReferences` patch, and awards the
+ * meteor_crossref ATP bonus when either source confirms the observation.
+ *
+ * Either side failing is non-fatal: the merge simply records that source as
+ * "no match" and keeps going. The capture path NEVER throws upward.
+ */
 const kickoffCrossReference = async (record: MomentCaptureRecord): Promise<void> => {
   try {
-    const result = await gmnCrossReferenceFor({
+    const query = {
       triggerAt: record.triggerAt,
       location: {
         latitude: record.location.latitude,
         longitude: record.location.longitude,
       },
       pose: { bearing: record.pose.bearing, elevation: record.pose.elevation },
-    });
-    await useMeteorCaptures.getState().updateCrossRef(record.id, result);
+    };
 
-    if (result.gmnMatch) {
-      // Bonus ATP per protocol spec — meteor_crossref event when a match lands.
+    const [gmnResult, sonotacoResult] = await Promise.all([
+      gmnCrossReferenceFor(query).catch(() => null),
+      sonotacoCrossReferenceFor(query).catch(() => null),
+    ]);
+
+    // Merge: gmnMatch and sonotacoMatch are independent booleans; observer
+    // counts add; for the headline shower/parent/velocity fields, prefer GMN
+    // (CC BY 4.0, larger global station footprint), fall back to SonotaCo.
+    const merged: Partial<CrossReferenceState> = {
+      gmnMatch: gmnResult?.gmnMatch ?? false,
+      sonotacoMatch: sonotacoResult?.sonotacoMatch ?? false,
+      matchedObservers:
+        (gmnResult?.matchedObservers ?? 0) + (sonotacoResult?.matchedObservers ?? 0),
+      parentBody: gmnResult?.parentBody ?? sonotacoResult?.parentBody ?? null,
+      showerName: gmnResult?.showerName ?? sonotacoResult?.showerName ?? null,
+      velocityKmS: gmnResult?.velocityKmS ?? sonotacoResult?.velocityKmS ?? null,
+      geocentricRadiantRa:
+        gmnResult?.geocentricRadiantRa ?? sonotacoResult?.geocentricRadiantRa ?? null,
+      geocentricRadiantDec:
+        gmnResult?.geocentricRadiantDec ?? sonotacoResult?.geocentricRadiantDec ?? null,
+    };
+
+    await useMeteorCaptures.getState().updateCrossRef(record.id, merged);
+
+    if (merged.gmnMatch || merged.sonotacoMatch) {
+      // Bonus ATP per protocol spec — meteor_crossref event when ANY source
+      // confirms the user's observation. We only emit once per capture even
+      // if both sources match, since the user only saw one meteor.
       await useAtp.getState().earn({
         eventType: 'meteor_crossref',
         amount: 25,
