@@ -1,9 +1,9 @@
 import React from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useAcademy, useAtp } from '@/stores';
+import { useAcademy, useAtp, useNightVision } from '@/stores';
 import { totalLessons } from '@/data/academy';
 import { colors, spacing, typography } from '@/theme/tokens';
 
@@ -13,6 +13,8 @@ export default function TabsLayout() {
   const insets = useSafeAreaInsets();
   const balance = useAtp((s) => s.balance);
   const completedCount = useAcademy((s) => Object.keys(s.completedLessonIds).length);
+  const nightVision = useNightVision((s) => s.enabled);
+  const toggleNightVision = useNightVision((s) => s.toggle);
 
   return (
     <View style={styles.frame}>
@@ -27,6 +29,26 @@ export default function TabsLayout() {
           </View>
         </View>
         <View style={styles.headerRight}>
+          {Platform.OS === 'web' ? (
+            <Pressable
+              onPress={toggleNightVision}
+              accessibilityRole="button"
+              accessibilityLabel={
+                nightVision ? 'Turn off night vision mode' : 'Turn on night vision mode'
+              }
+              style={({ pressed }) => [
+                styles.nightButton,
+                nightVision ? styles.nightButtonOn : null,
+                pressed ? { opacity: 0.7 } : null,
+              ]}
+            >
+              <Ionicons
+                name={nightVision ? 'moon' : 'moon-outline'}
+                size={13}
+                color={nightVision ? '#FF6B6B' : 'rgba(160,180,210,0.5)'}
+              />
+            </Pressable>
+          ) : null}
           <View style={[styles.pill, styles.pillGold]}>
             <Text style={styles.pillTextGold}>✦ {balance.toLocaleString()}</Text>
           </View>
@@ -164,6 +186,17 @@ const styles = StyleSheet.create({
   pillGold: {
     backgroundColor: 'rgba(251,191,36,0.06)',
     borderColor: 'rgba(251,191,36,0.12)',
+  },
+  nightButton: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
+  },
+  nightButtonOn: {
+    borderColor: 'rgba(255,107,107,0.4)',
+    backgroundColor: 'rgba(255,107,107,0.08)',
   },
   pillPurple: {
     backgroundColor: 'rgba(192,132,252,0.06)',

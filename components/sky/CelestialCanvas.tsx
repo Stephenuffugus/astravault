@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Dimensions,
+  Pressable,
   StyleSheet,
   Text,
   View,
@@ -28,6 +29,9 @@ import {
   type CelestialObject,
 } from '@/data/catalog';
 import { colors, typography } from '@/theme/tokens';
+import { requestLocation } from '@/services/location';
+import { useToast } from '@/stores';
+import { usePointing } from './usePointing';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -65,6 +69,59 @@ const CelestialCanvas: React.FC<CelestialCanvasProps> = ({
 
   const reticleScale = useSharedValue(1);
 
+  const [observer, setObserver] = useState<{ lat: number; lng: number } | null>(null);
+  const lastAimRef = useRef(0);
+  const gotReadingRef = useRef(false);
+
+  /* Sensor readings arrive at device rate; a light throttle plus a lerp
+     toward the target keeps the pan smooth instead of jittering with the
+     user's hand. */
+  const handleAim = useCallback((coord: { ra: number; dec: number }) => {
+    const now = Date.now();
+    gotReadingRef.current = true;
+    if (now - lastAimRef.current < 80) return;
+    lastAimRef.current = now;
+    setView((prev) => {
+      const dRA = ((coord.ra - prev.ra + 540) % 360) - 180;
+      return {
+        ra: ((prev.ra + dRA * 0.3) % 360 + 360) % 360,
+        dec: Math.max(-90, Math.min(90, prev.dec + (coord.dec - prev.dec) * 0.3)),
+      };
+    });
+  }, []);
+
+  const pointing = usePointing(observer, handleAim);
+
+  const togglePointing = useCallback(async () => {
+    if (pointing.active) {
+      pointing.stop();
+      return;
+    }
+    /* Sensor permission first: iOS only grants it inside the tap gesture,
+       and the location prompt would spend that gesture. */
+    const ok = await pointing.start();
+    if (!ok) {
+      useToast.getState().show('Motion sensors unavailable on this device', 'error');
+      return;
+    }
+    if (!observer) {
+      const got = await requestLocation();
+      if (!got) {
+        pointing.stop();
+        useToast.getState().show('Location needed to point at your sky', 'error');
+        return;
+      }
+      setObserver({ lat: got.latitude, lng: got.longitude });
+    }
+    gotReadingRef.current = false;
+    setTimeout(() => {
+      if (!gotReadingRef.current) {
+        pointing.stop();
+        useToast.getState().show('No motion readings arrived. Try on a phone.', 'error');
+      }
+    }, 2500);
+  }, [pointing, observer]);
+
   useEffect(() => {
     reticleScale.value = withRepeat(
       withTiming(1.12, { duration: 1600 }),
@@ -90,12 +147,13 @@ const CelestialCanvas: React.FC<CelestialCanvasProps> = ({
   const onTouchStart = useCallback((e: GestureResponderEvent) => {
     const touch = e.nativeEvent.touches[0];
     if (!touch) return;
+    if (pointing.active) pointing.stop();
     dragRef.current = {
       active: true,
       lastX: touch.pageX,
       lastY: touch.pageY,
     };
-  }, []);
+  }, [pointing]);
 
   const onTouchMove = useCallback((e: GestureResponderEvent) => {
     if (!dragRef.current.active) return;
@@ -247,8 +305,35 @@ const CelestialCanvas: React.FC<CelestialCanvasProps> = ({
         </Text>
       </View>
       <View style={styles.hintContainer} pointerEvents="none">
-        <Text style={styles.hintText}>DRAG TO PAN · TAP TO COLLECT</Text>
+        <Text style={styles.hintText}>
+          {pointing.active
+            ? 'POINTING AT YOUR SKY · TAP TO COLLECT'
+            : 'DRAG TO PAN · TAP TO COLLECT'}
+        </Text>
       </View>
+      {pointing.supported ? (
+        <Pressable
+          onPress={togglePointing}
+          accessibilityRole="button"
+          accessibilityLabel={
+            pointing.active ? 'Stop pointing mode' : 'Point phone at the sky'
+          }
+          style={({ pressed }) => [
+            styles.pointButton,
+            pointing.active ? styles.pointButtonActive : null,
+            pressed ? styles.pointPressed : null,
+          ]}
+        >
+          <Text
+            style={[
+              styles.pointText,
+              pointing.active ? styles.pointTextActive : null,
+            ]}
+          >
+            {pointing.active ? '⌖ POINTING' : '⌖ POINT'}
+          </Text>
+        </Pressable>
+      ) : null}
     </View>
   );
 };
@@ -285,6 +370,32 @@ const styles = StyleSheet.create({
     fontFamily: typography.webFallback.mono,
     fontSize: 9,
     letterSpacing: 1.5,
+  },
+  pointButton: {
+    position: 'absolute',
+    top: 10,
+    right: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: 'rgba(100,200,255,0.25)',
+    backgroundColor: 'rgba(2,3,11,0.6)',
+  },
+  pointButtonActive: {
+    borderColor: 'rgba(100,200,255,0.7)',
+    backgroundColor: 'rgba(96,165,250,0.15)',
+  },
+  pointPressed: { opacity: 0.7 },
+  pointText: {
+    color: 'rgba(100,200,255,0.6)',
+    fontFamily: typography.webFallback.mono,
+    fontSize: 10,
+    letterSpacing: 1.5,
+    fontWeight: '600',
+  },
+  pointTextActive: {
+    color: 'rgba(160,220,255,1)',
   },
 });
 

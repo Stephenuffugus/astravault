@@ -1,5 +1,11 @@
 /** Astra Vault celestial object catalog. */
 
+import {
+  AU_IN_LIGHT_YEARS,
+  isEphemerisPlanet,
+  planetEquatorial,
+} from '@/services/astro/planets';
+
 export type Rarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
 export type Category = 'star' | 'nebula' | 'galaxy' | 'planet' | 'cluster';
 
@@ -17,6 +23,11 @@ export interface CelestialObject {
   description: string;
 }
 
+/* Stars and deep-sky objects are fixed on the celestial sphere; planets are
+   not. Their entries below carry a snapshot ra/dec/distance as a fallback,
+   and refreshPlanetPositions() replaces those with computed positions for
+   right now (validated against JPL Horizons to within 0.1°). It runs at
+   module load and can be called again on any long-lived session. */
 export const CATALOG: CelestialObject[] = [
   { id: 'sirius', name: 'Sirius', category: 'star', constellation: 'Canis Major', magnitude: -1.46, ra: 101, dec: -17, color: '#A8C8FF', rarity: 'common', distance: 8.6, description: 'Brightest star. Binary system at 25x solar luminosity.' },
   { id: 'betelgeuse', name: 'Betelgeuse', category: 'star', constellation: 'Orion', magnitude: 0.42, ra: 89, dec: 7, color: '#FF6B4A', rarity: 'rare', distance: 700, description: 'Dying red supergiant, 1000x Sun diameter. Will go supernova.' },
@@ -47,6 +58,22 @@ export const CATALOG: CelestialObject[] = [
   { id: 'omega_cen', name: 'Ω Centauri', category: 'cluster', constellation: 'Centaurus', magnitude: 3.7, ra: 202, dec: -47, color: '#FFE8BB', rarity: 'epic', distance: 17090, description: 'Largest globular. 10M stars. Devoured dwarf galaxy.' },
   { id: 'm13', name: 'Hercules Cluster', category: 'cluster', constellation: 'Hercules', magnitude: 5.8, ra: 250, dec: 36, color: '#DDCCBB', rarity: 'uncommon', distance: 25100, description: 'M13. 300,000 stars. Best northern GC.' },
 ];
+
+export const refreshPlanetPositions = (date: Date = new Date()): void => {
+  for (const obj of CATALOG) {
+    if (obj.category !== 'planet' || !isEphemerisPlanet(obj.id)) continue;
+    try {
+      const pos = planetEquatorial(obj.id, date);
+      obj.ra = pos.ra;
+      obj.dec = pos.dec;
+      obj.distance = pos.distanceAu * AU_IN_LIGHT_YEARS;
+    } catch {
+      /* keep the snapshot values */
+    }
+  }
+};
+
+refreshPlanetPositions();
 
 export const RARITY_META: Record<Rarity, { label: string; color: string }> = {
   common: { label: 'COMMON', color: '#8B9BB4' },

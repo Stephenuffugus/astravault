@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import { DarkTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
+import Head from 'expo-router/head';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -27,7 +28,7 @@ import {
 
 import StarField from '@/components/sky/StarField';
 import { Toast } from '@/components/common';
-import { hydrateAllStores, useToast } from '@/stores';
+import { hydrateAllStores, useNightVision, useToast } from '@/stores';
 import { colors } from '@/theme/tokens';
 
 void SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -65,9 +66,26 @@ export default function RootLayout() {
   const [stateReady, setStateReady] = useState(false);
   const toastMessage = useToast((s) => s.message);
   const toastVariant = useToast((s) => s.variant);
+  const nightVision = useNightVision((s) => s.enabled);
 
   useEffect(() => {
     hydrateAllStores().finally(() => setStateReady(true));
+  }, []);
+
+  /* Night vision: one CSS filter pushes the whole page into dim red so the
+     screen stops wrecking dark-adapted eyes. Web only; native will get a
+     proper red theme with the native build. */
+  useEffect(() => {
+    if (Platform.OS !== 'web' || typeof document === 'undefined') return;
+    document.documentElement.style.filter = nightVision
+      ? 'grayscale(1) sepia(1) saturate(6) hue-rotate(-50deg) brightness(0.8)'
+      : '';
+  }, [nightVision]);
+
+  useEffect(() => {
+    if (Platform.OS === 'web' && !__DEV__ && 'serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/astravault/sw.js').catch(() => {});
+    }
   }, []);
 
   const fontsLoaded = crimsonLoaded && monoLoaded && playfairLoaded;
@@ -84,6 +102,9 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={styles.root}>
+      <Head>
+        <title>Astra Vault</title>
+      </Head>
       <SafeAreaProvider>
         <View style={styles.container}>
           <StarField />
