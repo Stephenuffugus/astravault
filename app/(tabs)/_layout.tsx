@@ -23,12 +23,12 @@ export default function TabsLayout() {
           </View>
           <View>
             <Text style={styles.title}>ASTRA VAULT</Text>
-            <Text style={styles.subtitle}>v0.1 · production build</Text>
+            <Text style={styles.subtitle}>a sky wolf studios app</Text>
           </View>
         </View>
         <View style={styles.headerRight}>
           <View style={[styles.pill, styles.pillGold]}>
-            <Text style={styles.pillTextGold}>{balance.toLocaleString()} ATP</Text>
+            <Text style={styles.pillTextGold}>✦ {balance.toLocaleString()}</Text>
           </View>
           <View style={[styles.pill, styles.pillPurple]}>
             <Text style={styles.pillTextPurple}>
@@ -82,16 +82,8 @@ export default function TabsLayout() {
             ),
           }}
         />
-        <Tabs.Screen
-          name="shared-sky"
-          options={{
-            title: 'Shared Sky',
-            tabBarLabel: 'SHARED',
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name={('earth-outline' satisfies TabIconName)} color={color} size={size} />
-            ),
-          }}
-        />
+        {/* Shared Sky stays hidden until it runs on real community data, not the mock feed. */}
+        <Tabs.Screen name="shared-sky" options={{ href: null }} />
         <Tabs.Screen
           name="learn"
           options={{

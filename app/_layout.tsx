@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
+import { DarkTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
@@ -30,6 +31,19 @@ import { hydrateAllStores, useToast } from '@/stores';
 import { colors } from '@/theme/tokens';
 
 void SplashScreen.preventAutoHideAsync().catch(() => {});
+
+/* The app is dark regardless of the viewer's system theme. Without this,
+   react-navigation follows prefers-color-scheme and paints its light scene
+   background (#f2f2f2) over the StarField for light-mode browsers. */
+const navTheme = {
+  ...DarkTheme,
+  colors: { ...DarkTheme.colors, background: 'transparent' },
+};
+
+if (Platform.OS === 'web' && typeof document !== 'undefined') {
+  document.documentElement.style.backgroundColor = colors.appBg;
+  document.body.style.backgroundColor = colors.appBg;
+}
 
 export default function RootLayout() {
   const [crimsonLoaded] = useCrimsonPro({
@@ -74,6 +88,7 @@ export default function RootLayout() {
         <View style={styles.container}>
           <StarField />
           <View style={styles.appLayer}>
+            <ThemeProvider value={navTheme}>
             <Stack
               screenOptions={{
                 headerShown: false,
@@ -104,6 +119,7 @@ export default function RootLayout() {
                 options={{ presentation: 'card' }}
               />
             </Stack>
+            </ThemeProvider>
           </View>
           <Toast message={toastMessage} variant={toastVariant} />
           <StatusBar style="light" />

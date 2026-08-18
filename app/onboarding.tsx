@@ -14,7 +14,7 @@ export const hasOnboarded = async (): Promise<boolean> =>
   (await AsyncStorage.getItem(ONBOARD_KEY)) === '1';
 
 const FEATURES: Array<{ icon: string; label: string; description: string }> = [
-  { icon: '🌍', label: 'Shared Sky', description: 'See the community' },
+  { icon: '☾', label: 'Hub', description: "Tonight's sky" },
   { icon: '◎', label: 'Scan', description: 'Explore & collect' },
   { icon: '◆', label: 'Vault', description: 'Your collection' },
   { icon: '🎓', label: 'Learn', description: '24 lessons' },
@@ -33,8 +33,8 @@ export default function OnboardingScreen() {
       <Text style={styles.logo}>✦</Text>
       <Text style={styles.title}>Astra Vault</Text>
       <Text style={styles.tagline}>
-        Scan the cosmos. Learn real astronomy. Join thousands of observers sharing tonight's sky.
-        No accounts needed. No chat. Just the stars and everyone looking up at them.
+        Scan the cosmos. Learn real astronomy. Collect the sky one object at a time.
+        No accounts. No ads. Just you and the stars.
       </Text>
 
       <View style={styles.featureGrid}>

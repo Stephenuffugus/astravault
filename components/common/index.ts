@@ -21,3 +21,5 @@ export type { ToastProps } from './Toast';
 
 export { default as Pill } from './Pill';
 export type { PillProps } from './Pill';
+
+export { default as StudioFooter } from './StudioFooter';

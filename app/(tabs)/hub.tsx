@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Badge, Card, ProgressBar, SectionLabel } from '@/components/common';
+import { Badge, Card, ProgressBar, SectionLabel, StudioFooter } from '@/components/common';
 import { EVENT_TYPE_COLOR, nextEvent } from '@/data/events2026';
 import {
   estimateBortle,
@@ -169,8 +169,8 @@ export default function HubScreen() {
             <Text style={styles.bortleTitle}>Rate tonight's sky</Text>
             <Text style={styles.bortleSub}>
               {bortleCount === 0
-                ? 'Submit a Bortle reading · +30 ATP'
-                : `Last rating: Class ${lastBortle?.class ?? '—'} · ${bortleCount} contributed`}
+                ? 'Submit a Bortle reading · +30 Stardust'
+                : `Last rating: Class ${lastBortle?.class ?? '?'} · ${bortleCount} contributed`}
             </Text>
           </Card>
         )}
@@ -210,6 +210,8 @@ export default function HubScreen() {
       </Pressable>
 
       <ObservationTimer />
+
+      <StudioFooter />
     </ScrollView>
   );
 }
@@ -290,7 +292,7 @@ function ApodPanel({ apod }: { apod: ApodState }) {
         />
       ) : (
         <View style={styles.apodVideoPlaceholder}>
-          <Text style={styles.apodSub}>Video — open NASA APOD in browser</Text>
+          <Text style={styles.apodSub}>Video · open NASA APOD in browser</Text>
         </View>
       )}
       <Text style={styles.apodTitle}>{entry.title}</Text>
@@ -513,7 +515,7 @@ function IssPanel({
           ? 'Enable location to see if it is overhead'
           : overhead
             ? 'Within sight horizon right now'
-            : 'Below your horizon — wait for next pass'}
+            : 'Below your horizon. Wait for the next pass.'}
       </Text>
     </View>
   );

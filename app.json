@@ -56,7 +56,8 @@
       ]
     ],
     "experiments": {
-      "typedRoutes": true
+      "typedRoutes": true,
+      "baseUrl": "/astravault"
     },
     "extra": {
       "gameId": "astra_vault",

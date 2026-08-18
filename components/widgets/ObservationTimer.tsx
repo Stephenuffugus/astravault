@@ -37,11 +37,11 @@ export default function ObservationTimer() {
       pause();
     } else if (accumulatedMs > 0) {
       void endObservationSession().then(() => {
-        showToast(`Session ended — +${earnedThisSession} ATP banked`, 'atp');
+        showToast(`Session ended · +${earnedThisSession} Stardust banked`, 'atp');
       });
     } else {
       start();
-      showToast('Session started — 1 ATP every 30 sec', 'info');
+      showToast('Session started · 1 Stardust every 30 sec', 'info');
     }
   };
 
@@ -59,10 +59,10 @@ export default function ObservationTimer() {
           <Text style={styles.timeText}>{formatDuration(elapsedMs)}</Text>
           <Text style={styles.subText}>
             {isRunning
-              ? 'Recording attention…'
+              ? 'Session running…'
               : accumulatedMs > 0
-                ? 'Paused — tap End to bank'
-                : 'Earn 1 ATP per 30 seconds'}
+                ? 'Paused · tap End to bank'
+                : 'Earn 1 Stardust per 30 seconds'}
           </Text>
         </View>
         <Pressable
@@ -95,7 +95,7 @@ export default function ObservationTimer() {
         </Pressable>
       </View>
       {earnedThisSession > 0 ? (
-        <Text style={styles.earnedText}>+{earnedThisSession} ATP this session</Text>
+        <Text style={styles.earnedText}>+{earnedThisSession} Stardust this session</Text>
       ) : null}
     </Card>
   );

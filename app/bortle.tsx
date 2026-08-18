@@ -56,7 +56,7 @@ export default function BortleScreen() {
       longitude: loc?.longitude ?? null,
       note: note.trim() ? note.trim() : null,
     });
-    showToast('+30 ATP — Bortle rating banked', 'atp');
+    showToast('+30 Stardust · Bortle rating banked', 'atp');
     router.back();
   };
 
@@ -73,7 +73,7 @@ export default function BortleScreen() {
       <Text style={styles.title}>Rate Tonight's Sky</Text>
       <Text style={styles.tagline}>
         The Bortle scale (1 = pristine, 9 = inner city) is how astronomers measure
-        light pollution. Your reading contributes to a global picture and earns 30 ATP.
+        light pollution. Your reading contributes to a global picture and earns 30 Stardust.
       </Text>
 
       <Card style={styles.legendCard}>
@@ -155,7 +155,7 @@ export default function BortleScreen() {
             picked === null ? styles.submitTextDisabled : null,
           ]}
         >
-          {submitting ? 'Submitting…' : 'SUBMIT · +30 ATP'}
+          {submitting ? 'Submitting…' : 'SUBMIT · +30 ✦'}
         </Text>
       </Pressable>
     </ScrollView>

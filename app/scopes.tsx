@@ -89,7 +89,7 @@ export default function ScopesScreen() {
       <Text style={styles.title}>Connected Telescopes</Text>
       <Text style={styles.tagline}>
         Astra Vault speaks ASCOM Alpaca natively. Connect your Seestar (any S-series) directly
-        over your LAN — Astra Vault will read its current target, drive slews, and log every
+        over your LAN. Astra Vault will read its current target, drive slews, and log every
         observation to your Vault.
       </Text>
 
@@ -178,8 +178,8 @@ export default function ScopesScreen() {
 
         {vendor === 'vespera' || vendor === 'unistellar' ? (
           <Text style={styles.partnerNote}>
-            {vendor === 'vespera' ? 'Vaonis Vespera' : 'Unistellar eVscope'} integration is
-            partnership-gated — see outreach/{vendor}.md.
+            {vendor === 'vespera' ? 'Vaonis Vespera' : 'Unistellar eVscope'} support is on
+            the way. Seestar works today.
           </Text>
         ) : null}
       </Card>

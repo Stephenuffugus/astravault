@@ -11,9 +11,9 @@ function AtpBadge({ amount }: AtpBadgeProps) {
     <View
       style={styles.badge}
       accessibilityRole="text"
-      accessibilityLabel={`${amount} ATP`}
+      accessibilityLabel={`${amount} Stardust`}
     >
-      <Text style={styles.text}>{amount.toLocaleString()} ATP</Text>
+      <Text style={styles.text}>✦ {amount.toLocaleString()}</Text>
     </View>
   );
 }

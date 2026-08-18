@@ -37,9 +37,9 @@ export default function ScanScreen() {
     const record = await triggerCapture('manual_tap');
     setCapturing(false);
     if (record) {
-      showToast('+10 ATP — Moment captured, cross-referencing GMN…', 'atp');
+      showToast('+10 Stardust · Moment captured, checking meteor networks…', 'atp');
     } else {
-      showToast('Location needed for capture — grant permission', 'error');
+      showToast('Location needed for capture. Grant permission and try again.', 'error');
     }
   }, [capturing, showToast]);
 
@@ -51,7 +51,7 @@ export default function ScanScreen() {
     if (!selected) return;
     const added = await collect(selected);
     if (added) {
-      showToast(`+${atpFor(selected.rarity)} ATP — ${selected.name}`);
+      showToast(`+${atpFor(selected.rarity)} Stardust · ${selected.name}`);
     }
     setSelected({ ...selected });
   }, [collect, selected, showToast]);

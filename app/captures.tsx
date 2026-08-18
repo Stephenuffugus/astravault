@@ -32,7 +32,7 @@ export default function CapturesScreen() {
       <Text style={styles.title}>Moment Captures</Text>
       <Text style={styles.tagline}>
         Every tap, voice, or auto-detected event you record creates a time-synced,
-        geotagged observation. We cross-reference against the Global Meteor Network — when a
+        geotagged observation. We cross-reference against the Global Meteor Network. When a
         match lands, you see who else saw the same meteor.
       </Text>
 

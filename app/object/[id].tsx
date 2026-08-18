@@ -72,7 +72,7 @@ export default function ObjectDetailScreen() {
 
   const onCollect = async () => {
     const added = await collect(object);
-    if (added) showToast(`+${atpFor(object.rarity)} ATP — ${object.name}`);
+    if (added) showToast(`+${atpFor(object.rarity)} Stardust · ${object.name}`);
   };
 
   return (
@@ -170,8 +170,8 @@ export default function ObjectDetailScreen() {
 
             <Text style={styles.spectrumCaption}>
               {deepZoom
-                ? `${hipsSurvey.spectrum} — HiPS ${hipsSurvey.id} · ${hipsSurvey.attribution}`
-                : `${activeSurvey.spectrum} — ${activeSurvey.apiName}`}
+                ? `${hipsSurvey.spectrum} · HiPS ${hipsSurvey.id} · ${hipsSurvey.attribution}`
+                : `${activeSurvey.spectrum} · ${activeSurvey.apiName}`}
             </Text>
           </Card>
         </>

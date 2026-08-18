@@ -43,7 +43,7 @@ export default function LessonScreen() {
       void (async () => {
         const earned = await useAcademy.getState().completeLesson(lesson.id);
         if (earned) {
-          useToast.getState().show(`+${lesson.atpReward} ATP — Lesson complete!`);
+          useToast.getState().show(`+${lesson.atpReward} Stardust · Lesson complete!`);
         }
       })();
     }

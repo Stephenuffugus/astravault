@@ -27,8 +27,8 @@ export default function LearnScreen() {
     >
       <SectionLabel>ASTRONOMY ACADEMY</SectionLabel>
       <Text style={styles.intro}>
-        Master the night sky. Each lesson teaches real astronomy and rewards you with ATP for
-        demonstrating knowledge.
+        Master the night sky. Each lesson teaches real astronomy and rewards you with Stardust
+        for demonstrating knowledge.
       </Text>
 
       <View style={styles.list}>
@@ -52,7 +52,7 @@ export default function LearnScreen() {
                 <View style={styles.cardHeaderText}>
                   <Text style={styles.title}>{path.title}</Text>
                   <Text style={[styles.subtitle, { color: path.color }]}>
-                    {done}/{total} lessons · {total * 15} ATP
+                    {done}/{total} lessons · {total * 15} ✦
                   </Text>
                 </View>
               </View>
