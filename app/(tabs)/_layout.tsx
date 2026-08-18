@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   subtitle: {
-    fontSize: 7,
+    fontSize: 12,
     letterSpacing: 1.5,
     color: 'rgba(160,180,210,0.3)',
     fontFamily: typography.fonts.mono,
@@ -203,13 +203,13 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(192,132,252,0.12)',
   },
   pillTextGold: {
-    fontSize: 10,
+    fontSize: 12,
     color: colors.accent.gold,
     fontFamily: typography.fonts.monoMedium,
     fontWeight: '600',
   },
   pillTextPurple: {
-    fontSize: 10,
+    fontSize: 12,
     color: colors.accent.purple,
     fontFamily: typography.fonts.monoMedium,
     fontWeight: '600',
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
     height: 64,
   },
   tabLabel: {
-    fontSize: 8,
+    fontSize: 11,
     letterSpacing: 1.5,
     fontFamily: typography.fonts.mono,
     marginBottom: 2,

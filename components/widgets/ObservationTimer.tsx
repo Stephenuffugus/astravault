@@ -62,7 +62,7 @@ export default function ObservationTimer() {
               ? 'Session running…'
               : accumulatedMs > 0
                 ? 'Paused · tap End to bank'
-                : 'Earn 1 Stardust per 30 seconds'}
+                : 'Watching the sky? Run this while you observe · 1 Stardust per 30 sec'}
           </Text>
         </View>
         <Pressable

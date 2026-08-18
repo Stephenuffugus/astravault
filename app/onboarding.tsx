@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { colors, radii, spacing, typography } from '@/theme/tokens';
@@ -13,11 +13,35 @@ export const markOnboarded = async (): Promise<void> => {
 export const hasOnboarded = async (): Promise<boolean> =>
   (await AsyncStorage.getItem(ONBOARD_KEY)) === '1';
 
+/* Beta feedback, Stephen, day one: "the entire app is pretty vague and im
+   confused about what does what." This screen owns the fix: every tab gets
+   a real sentence, in reading-size type, before anyone is dropped into the
+   app. */
 const FEATURES: Array<{ icon: string; label: string; description: string }> = [
-  { icon: '☾', label: 'Hub', description: "Tonight's sky" },
-  { icon: '◎', label: 'Scan', description: 'Explore & collect' },
-  { icon: '◆', label: 'Vault', description: 'Your collection' },
-  { icon: '🎓', label: 'Learn', description: '24 lessons' },
+  {
+    icon: '◎',
+    label: 'Scan',
+    description:
+      'Drag across the night sky, tap a star or planet, and collect it. Planets sit where they really are tonight.',
+  },
+  {
+    icon: '◆',
+    label: 'Vault',
+    description:
+      'Your collection. Every object you collect is kept here, from common stars to legendary rarities.',
+  },
+  {
+    icon: '☾',
+    label: 'Hub',
+    description:
+      "Tonight's sky at a glance: observing conditions, the moon, NASA's photo of the day, and live rocket launches.",
+  },
+  {
+    icon: '🎓',
+    label: 'Learn',
+    description:
+      'Short astronomy lessons with a quick quiz at the end. Real science, plainly told.',
+  },
 ];
 
 export default function OnboardingScreen() {
@@ -29,37 +53,44 @@ export default function OnboardingScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.logo}>✦</Text>
       <Text style={styles.title}>Astra Vault</Text>
       <Text style={styles.tagline}>
-        Scan the cosmos. Learn real astronomy. Collect the sky one object at a time.
-        No accounts. No ads. Just you and the stars.
+        Scan the cosmos. Collect the sky. No accounts, no ads.
       </Text>
 
-      <View style={styles.featureGrid}>
+      <View style={styles.featureList}>
         {FEATURES.map((f) => (
-          <View key={f.label} style={styles.featureCard}>
+          <View key={f.label} style={styles.featureRow}>
             <Text style={styles.featureIcon}>{f.icon}</Text>
-            <Text style={styles.featureLabel}>{f.label}</Text>
-            <Text style={styles.featureDesc}>{f.description}</Text>
+            <View style={styles.featureBody}>
+              <Text style={styles.featureLabel}>{f.label}</Text>
+              <Text style={styles.featureDesc}>{f.description}</Text>
+            </View>
           </View>
         ))}
       </View>
 
+      <Text style={styles.stardustNote}>
+        Everything you do earns ✦ Stardust. It is your score, plain and simple,
+        and it never costs or buys a thing.
+      </Text>
+
       <Pressable style={styles.beginButton} onPress={begin}>
         <Text style={styles.beginText}>BEGIN</Text>
       </Pressable>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 24,
+    padding: spacing.pageX,
+    paddingVertical: 40,
   },
   logo: {
     fontSize: 44,
@@ -67,65 +98,79 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   title: {
-    fontSize: 30,
+    fontSize: 32,
     color: colors.text.primary,
     fontFamily: typography.fonts.heading,
     fontWeight: '700',
     marginBottom: 8,
   },
   tagline: {
-    fontSize: 13,
-    color: colors.text.dim,
+    fontSize: 16,
+    color: colors.text.secondary,
+    fontFamily: typography.fonts.body,
+    textAlign: 'center',
+    maxWidth: 340,
+    lineHeight: 24,
+    marginBottom: 28,
+  },
+  featureList: {
+    gap: 14,
+    maxWidth: 400,
+    width: '100%',
+    marginBottom: 22,
+  },
+  featureRow: {
+    flexDirection: 'row',
+    gap: 14,
+    alignItems: 'flex-start',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: radii.cardLarge,
+    backgroundColor: 'rgba(255,255,255,0.03)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.06)',
+  },
+  featureIcon: {
+    fontSize: 22,
+    width: 30,
+    textAlign: 'center',
+    marginTop: 2,
+  },
+  featureLabel: {
+    fontSize: 15,
+    color: colors.text.primary,
+    fontFamily: typography.fonts.monoMedium,
+    letterSpacing: 1.5,
+    fontWeight: '700',
+    marginBottom: 3,
+  },
+  featureBody: { flex: 1 },
+  featureDesc: {
+    fontSize: 14,
+    color: colors.text.secondary,
+    fontFamily: typography.fonts.body,
+    lineHeight: 20,
+  },
+  stardustNote: {
+    fontSize: 14,
+    color: colors.accent.gold,
     fontFamily: typography.fonts.body,
     textAlign: 'center',
     maxWidth: 360,
-    lineHeight: 22,
+    lineHeight: 21,
     marginBottom: 26,
-  },
-  featureGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    gap: 8,
-    maxWidth: 360,
-    marginBottom: 28,
-  },
-  featureCard: {
-    flexBasis: '22%',
-    minWidth: 76,
-    paddingVertical: 12,
-    paddingHorizontal: 6,
-    borderRadius: 10,
-    backgroundColor: 'rgba(255,255,255,0.02)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.04)',
-    alignItems: 'center',
-  },
-  featureIcon: { fontSize: 20, marginBottom: 4 },
-  featureLabel: {
-    fontSize: 10,
-    color: colors.text.secondary,
-    fontFamily: typography.fonts.mono,
-    letterSpacing: 1,
-    fontWeight: '600',
-  },
-  featureDesc: {
-    fontSize: 8,
-    color: colors.text.ghost,
-    fontFamily: typography.fonts.mono,
-    marginTop: 2,
-    textAlign: 'center',
+    opacity: 0.9,
   },
   beginButton: {
-    paddingHorizontal: 36,
-    paddingVertical: 12,
+    paddingHorizontal: 44,
+    paddingVertical: 14,
     borderRadius: radii.button,
     borderWidth: 1,
-    borderColor: 'rgba(96,165,250,0.3)',
-    backgroundColor: 'rgba(96,165,250,0.08)',
+    borderColor: 'rgba(96,165,250,0.4)',
+    backgroundColor: 'rgba(96,165,250,0.10)',
   },
   beginText: {
-    fontSize: 12,
+    fontSize: 14,
     color: colors.text.primary,
     fontFamily: typography.fonts.monoMedium,
     fontWeight: '700',

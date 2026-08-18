@@ -271,7 +271,7 @@ const CelestialCanvas: React.FC<CelestialCanvasProps> = ({
                 <SvgText
                   x={ox + br + 6}
                   y={oy + 4}
-                  fontSize={10}
+                  fontSize={12}
                   fontWeight="600"
                   fontFamily={typography.webFallback.mono}
                   fill="rgba(200,210,230,0.7)"
@@ -357,7 +357,7 @@ const styles = StyleSheet.create({
   coordsText: {
     color: 'rgba(100,200,255,0.4)',
     fontFamily: typography.webFallback.mono,
-    fontSize: 10,
+    fontSize: 12,
     letterSpacing: 1,
   },
   hintContainer: {
@@ -368,7 +368,7 @@ const styles = StyleSheet.create({
   hintText: {
     color: 'rgba(100,180,255,0.25)',
     fontFamily: typography.webFallback.mono,
-    fontSize: 9,
+    fontSize: 11,
     letterSpacing: 1.5,
   },
   pointButton: {
@@ -390,7 +390,7 @@ const styles = StyleSheet.create({
   pointText: {
     color: 'rgba(100,200,255,0.6)',
     fontFamily: typography.webFallback.mono,
-    fontSize: 10,
+    fontSize: 12,
     letterSpacing: 1.5,
     fontWeight: '600',
   },

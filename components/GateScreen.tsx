@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     letterSpacing: 3,
   },
   smallPrint: {
-    fontSize: 10,
+    fontSize: 12,
     color: colors.text.ghost,
     fontFamily: typography.fonts.mono,
     textAlign: 'center',
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     marginTop: 34,
   },
   studio: {
-    fontSize: 10,
+    fontSize: 12,
     color: colors.text.dim,
     fontFamily: typography.fonts.mono,
     marginTop: 10,

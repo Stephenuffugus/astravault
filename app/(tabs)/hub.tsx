@@ -169,7 +169,7 @@ export default function HubScreen() {
             <Text style={styles.bortleTitle}>Rate tonight's sky</Text>
             <Text style={styles.bortleSub}>
               {bortleCount === 0
-                ? 'Submit a Bortle reading · +30 Stardust'
+                ? 'How dark is your sky tonight? Rate it · +30 Stardust'
                 : `Last rating: Class ${lastBortle?.class ?? '?'} · ${bortleCount} contributed`}
             </Text>
           </Card>
@@ -187,7 +187,7 @@ export default function HubScreen() {
                   ? ` · last matched ${lastCapture.crossReferences.showerName ?? 'GMN'}`
                   : ''}
               </Text>
-              <Text style={styles.bortleSub}>Tap to review · GMN cross-reference results</Text>
+              <Text style={styles.bortleSub}>Tap to see each moment and any meteor network matches</Text>
             </Card>
           )}
         </Pressable>
@@ -203,7 +203,7 @@ export default function HubScreen() {
                 : `${scopeCount} scope${scopeCount === 1 ? '' : 's'} connected`}
             </Text>
             <Text style={styles.bortleSub}>
-              ASCOM Alpaca · LAN · drive slews and log observations
+              Have a smart telescope? Connect it over your wifi
             </Text>
           </Card>
         )}

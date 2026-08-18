@@ -37,7 +37,7 @@ export default function ScanScreen() {
     const record = await triggerCapture('manual_tap');
     setCapturing(false);
     if (record) {
-      showToast('+10 Stardust · Moment captured, checking meteor networks…', 'atp');
+      showToast('+10 Stardust · Moment saved to your Hub', 'atp');
     } else {
       showToast('Location needed for capture. Grant permission and try again.', 'error');
     }
@@ -68,6 +68,14 @@ export default function ScanScreen() {
 
       <FrameCaptureSurface />
 
+      {captureCount === 0 ? (
+        <View style={styles.captureHint} pointerEvents="none">
+          <Text style={styles.captureHintText}>
+            See a meteor? Capture the moment. It saves your time, place and sky,
+            then checks meteor networks for a match. Captures live on your Hub.
+          </Text>
+        </View>
+      ) : null}
       <View style={styles.captureBar} pointerEvents="box-none">
         <Pressable
           onPress={handleCapture}
@@ -180,7 +188,7 @@ const ObjectDetail: React.FC<ObjectDetailProps> = ({
             ]}
           >
             <Text style={[styles.collectText, { color: rarity.color }]}>
-              + COLLECT · {atpFor(object.rarity)} ATP
+              + COLLECT · {atpFor(object.rarity)} ✦
             </Text>
           </Pressable>
         ) : (
@@ -223,6 +231,25 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.scannerClear,
   },
+  captureHint: {
+    position: 'absolute',
+    bottom: 78,
+    left: 20,
+    right: 20,
+    alignItems: 'center',
+  },
+  captureHintText: {
+    fontSize: 13,
+    lineHeight: 19,
+    color: 'rgba(200,215,240,0.75)',
+    fontFamily: typography.webFallback.body,
+    textAlign: 'center',
+    backgroundColor: 'rgba(8,12,25,0.85)',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 12,
+    maxWidth: 380,
+  },
   captureBar: {
     position: 'absolute',
     bottom: 20,
@@ -256,7 +283,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   captureText: {
-    fontSize: 12,
+    fontSize: 13,
     color: colors.accent.gold,
     fontFamily: typography.fonts.monoMedium,
     fontWeight: '700',
@@ -271,7 +298,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(8,12,25,0.85)',
   },
   capturesLinkText: {
-    fontSize: 11,
+    fontSize: 12,
     color: colors.text.muted,
     fontFamily: typography.fonts.monoMedium,
     letterSpacing: 1,
@@ -292,7 +319,7 @@ const styles = StyleSheet.create({
     maxWidth: 420,
   },
   rarityLabel: {
-    fontSize: 9,
+    fontSize: 12,
     letterSpacing: 3,
     fontFamily: typography.webFallback.mono,
     fontWeight: '600',
@@ -306,17 +333,17 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   constellation: {
-    fontSize: 11,
+    fontSize: 12,
     color: colors.text.muted,
     fontFamily: typography.webFallback.mono,
     letterSpacing: 1,
     marginBottom: 10,
   },
   description: {
-    fontSize: 13,
+    fontSize: 15,
     color: colors.text.muted,
     fontFamily: typography.webFallback.body,
-    lineHeight: 20,
+    lineHeight: 22,
     marginBottom: 14,
   },
   dataGrid: {
@@ -330,14 +357,14 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   dataLabel: {
-    fontSize: 8,
+    fontSize: 12,
     color: colors.text.ghost,
     fontFamily: typography.webFallback.mono,
     letterSpacing: 2,
     marginBottom: 2,
   },
   dataValue: {
-    fontSize: 13,
+    fontSize: 15,
     color: colors.text.secondary,
     fontFamily: typography.webFallback.mono,
     fontWeight: '600',
@@ -354,7 +381,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   collectText: {
-    fontSize: 11,
+    fontSize: 12,
     fontFamily: typography.webFallback.mono,
     fontWeight: '700',
     letterSpacing: 1,

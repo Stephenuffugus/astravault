@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   text: {
-    fontSize: 10,
+    fontSize: 12,
     color: colors.accent.gold,
     fontFamily: typography.fonts.monoMedium,
     fontWeight: '600',

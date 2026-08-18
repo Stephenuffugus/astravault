@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   },
   pressed: { opacity: 0.7 },
   line: {
-    fontSize: 10,
+    fontSize: 12,
     color: colors.text.ghost,
     fontFamily: typography.fonts.mono,
   },
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   link: {
-    fontSize: 10,
+    fontSize: 12,
     color: colors.text.dim,
     fontFamily: typography.fonts.mono,
     textDecorationLine: 'underline',

@@ -257,5 +257,5 @@ const styles = StyleSheet.create({
   statsGrid: { flexDirection: 'row', gap: 8 },
   statCell: { flex: 1, alignItems: 'center' },
   statValue: { fontSize: 16, fontWeight: '700', color: colors.text.secondary, fontFamily: mono },
-  statLabel: { fontSize: 8, color: 'rgba(160,180,210,0.35)', fontFamily: mono, marginTop: 2 },
+  statLabel: { fontSize: 11, color: 'rgba(160,180,210,0.35)', fontFamily: mono, marginTop: 2 },
 });

@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   rarityLabel: {
-    fontSize: 10,
+    fontSize: 12,
     letterSpacing: 3,
     fontFamily: typography.fonts.mono,
     marginBottom: 4,
@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   deepZoomLabel: {
-    fontSize: 10,
+    fontSize: 12,
     fontFamily: typography.fonts.monoMedium,
     letterSpacing: 1.5,
   },

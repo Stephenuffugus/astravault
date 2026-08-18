@@ -327,7 +327,7 @@ const styles = StyleSheet.create({
   removeText: {
     color: colors.accent.red,
     fontFamily: t.fonts.mono,
-    fontSize: 10,
+    fontSize: 12,
     letterSpacing: 1.5,
   },
   fieldLabel: {
