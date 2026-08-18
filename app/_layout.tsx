@@ -26,9 +26,10 @@ import {
   useFonts as usePlayfair,
 } from '@expo-google-fonts/playfair-display';
 
+import GateScreen from '@/components/GateScreen';
 import StarField from '@/components/sky/StarField';
 import { Toast } from '@/components/common';
-import { hydrateAllStores, useNightVision, useToast } from '@/stores';
+import { hydrateAllStores, useDevGate, useNightVision, useToast } from '@/stores';
 import { colors } from '@/theme/tokens';
 
 void SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -67,6 +68,7 @@ export default function RootLayout() {
   const toastMessage = useToast((s) => s.message);
   const toastVariant = useToast((s) => s.variant);
   const nightVision = useNightVision((s) => s.enabled);
+  const gateUnlocked = useDevGate((s) => s.unlocked);
 
   useEffect(() => {
     hydrateAllStores().finally(() => setStateReady(true));
@@ -108,6 +110,11 @@ export default function RootLayout() {
       <SafeAreaProvider>
         <View style={styles.container}>
           <StarField />
+          {!gateUnlocked ? (
+            <View style={styles.appLayer}>
+              <GateScreen />
+            </View>
+          ) : (
           <View style={styles.appLayer}>
             <ThemeProvider value={navTheme}>
             <Stack
@@ -142,6 +149,7 @@ export default function RootLayout() {
             </Stack>
             </ThemeProvider>
           </View>
+          )}
           <Toast message={toastMessage} variant={toastVariant} />
           <StatusBar style="light" />
         </View>
